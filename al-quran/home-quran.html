@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qalbu - Baca Al-Quran & Jadwal Shalat</title>
+    
+    <!-- Script Anti-Flash Theme (Mencegah background putih muncul sekejap di mode dark) -->
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Tailwind CSS (CDN for HTML only setup) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                        arabic: ['Noto Naskh Arabic', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            light: '#18181b', // Zinc-900 (hampir hitam)
+                            dark: '#f4f4f5',  // Zinc-100 (hampir putih)
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Styling khusus untuk tipografi Arab */
+        .font-arabic {
+            font-family: 'Amiri', serif;
+            line-height: 2.2;
+        }
+
+        /* Memperhalus tampilan scrollbar agar lebih menyatu dengan desain */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+
+        /* Utilitas untuk card hover effect */
+        .card-hover-fx {
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .card-hover-fx:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+
+</head>
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 antialiased transition-colors duration-300 flex flex-col min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 w-full backdrop-blur-xl bg-slate-50/80 dark:bg-slate-950/80 border-b border-slate-300 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <a href="/index.html" class="flex items-center gap-2 group">
+                <i class="ph-fill ph-book-open-text text-2xl text-brand-light dark:text-brand-dark group-hover:scale-110 transition-transform"></i>
+                <span class="font-bold text-xl tracking-tight text-brand-light dark:text-brand-dark">Qalbu</span>
+            </a>
+            
+            <!-- Menu Desktop -->
+            <div class="hidden md:flex items-center gap-8 text-sm font-semibold">
+                <a href="#" class="text-brand-light dark:text-brand-dark font-bold underline-offset-4 underline transition-colors">Al-Quran</a>
+                <a href="/doa/home-doa.html" class="hover:text-brand-light dark:hover:text-brand-dark transition-colors">Doa Harian</a>
+                <a href="/jadwal-shalat/home-jadwal.html" class="hover:text-brand-light dark:hover:text-brand-dark transition-colors">Jadwal Shalat</a>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <!-- Theme Toggle -->
+                <button id="theme-toggle" class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Dark Mode">
+                    <i class="ph ph-moon text-xl dark:hidden text-slate-800"></i>
+                    <i class="ph ph-sun text-xl hidden dark:block text-amber-300"></i>
+                </button>
+
+                <!-- Tombol Hamburger Mobile -->
+                <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Navigation Menu">
+                    <i id="menu-icon-open" class="ph ph-list text-2xl"></i>
+                    <i id="menu-icon-close" class="ph ph-x text-2xl hidden"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Panel Menu Mobile (Collapse) -->
+        <div id="mobile-menu" class="hidden md:hidden border-t border-slate-300 dark:border-slate-800 bg-slate-50/95 dark:bg-slate-950/95 backdrop-blur-xl px-4 pt-2 pb-4 space-y-1">
+            <a href="#" class="mobile-nav-link block px-3 py-2 rounded-lg text-base font-bold text-brand-light dark:text-brand-dark bg-slate-200/60 dark:bg-slate-900 transition-colors">Al-Quran</a>
+            <a href="/doa/home-doa.html" class="mobile-nav-link block px-3 py-2 rounded-lg text-base font-medium hover:bg-slate-200/80 dark:hover:bg-slate-800/80 hover:text-brand-light dark:hover:text-brand-dark transition-colors">Doa Harian</a>
+            <a href="/jadwal-shalat/home-jadwal.html" class="mobile-nav-link block px-3 py-2 rounded-lg text-base font-medium hover:bg-slate-200/80 dark:hover:bg-slate-800/80 hover:text-brand-light dark:hover:text-brand-dark transition-colors">Jadwal Shalat</a>
+        </div>
+    </nav>
+
+        <!-- Header Section -->
+    <header class="max-w-4xl mx-auto px-4 pt-12 pb-8 text-center">
+        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight mb-3 text-slate-900 dark:text-slate-100">
+            Jadwal Shalat Hari Ini
+        </h1>
+        <p class="text-slate-700 dark:text-slate-300 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed font-medium">
+            Lihat jadwal shalat harian untuk wilayah Anda. Pilih provinsi, kabupaten/kota, dan bulan untuk melihat jadwal lengkap.
+        </p>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
+            <div class="relative w-full sm:w-auto">
+                <i class="ph ph-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 dark:text-slate-300"></i>
+                <input type="text" id="search-surah" placeholder="Cari surah (mis: Yasin)..." class="w-full sm:w-72 pl-12 pr-4 py-3.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-full text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-500 transition-all font-medium">
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow p-4">
+        <!-- Surah Grid -->
+        <section id="quran" class="max-w-7xl mx-auto px-4 mb-24">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="surah-grid">
+                <!-- State Loading Berkontras Tinggi & Anti-Flash -->
+                <div class="col-span-1 sm:col-span-2 lg:col-span-3 text-center py-12 text-slate-700 dark:text-slate-300 font-medium">
+                    <i class="ph-fill ph-spinner animate-spin text-3xl mb-3 inline-block"></i>
+                    <p class="text-sm">Memuat daftar surah...</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-300 dark:border-slate-800 mt-32 py-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <i class="ph-fill ph-book-open-text text-3xl text-slate-400 dark:text-slate-600 mb-4 inline-block"></i>
+            <p class="font-bold text-lg text-brand-light dark:text-brand-dark">Qalbu.</p>
+            <p class="text-slate-700 dark:text-slate-300 text-sm mt-2 font-medium">Sumber teks Al-Quran dari API EQuran.id (Kemenag RI).</p>
+            <p class="text-slate-600 dark:text-slate-400 text-sm mt-8">&copy; 2026 Dibangun untuk kenyamanan membaca.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initThemeToggle();
+            fetchSurah();
+        });
+
+        let timeoutId;
+
+        document.getElementById('search-surah').addEventListener('input', function(event) {
+            clearTimeout(timeoutId);
+            
+            timeoutId = setTimeout(() => {
+                searchSurah(event.target.value);
+            }, 500);
+        });
+
+        async function searchSurah(query){
+            const grid = document.getElementById('surah-grid');
+            try {
+                const response = await fetch('https://equran.id/api/v2/surat');
+                const data = await response.json();
+
+                if (data.code === 200) {
+                    grid.innerHTML = '';
+
+                    const filteredSurah = data.data.filter(item => item.namaLatin.toLowerCase().includes(query.toLowerCase()));
+
+                    if (filteredSurah.length === 0) {
+                        grid.innerHTML = `<div class="col-span-1 sm:col-span-2 lg:col-span-3 text-center py-8 text-slate-700 dark:text-slate-300 font-medium">Surah tidak ditemukan.</div>`;
+                        return;
+                    }
+
+                    filteredSurah.forEach(surat => {
+                        grid.innerHTML += `
+                            <a href="/al-quran/detail-surah.html?nomor=${surat.nomor}" class="group bg-white dark:bg-slate-900 p-6 border border-slate-300 dark:border-slate-800 rounded-2xl flex items-center justify-between card-hover-fx hover:border-slate-900 dark:hover:border-slate-100 transition-colors">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-sm font-bold text-slate-800 dark:text-slate-200">
+                                        ${surat.nomor}
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-lg text-slate-900 dark:text-slate-100 group-hover:text-brand-light dark:group-hover:text-brand-dark transition-colors">${surat.namaLatin}</h3>
+                                        <p class="text-xs text-slate-600 dark:text-slate-400 mt-1 tracking-wider font-semibold">${surat.tempatTurun} • ${surat.jumlahAyat} Ayat</p>
+                                    </div>
+                                </div>
+                                <div class="font-arabic text-2xl text-slate-900 dark:text-slate-100 text-right">
+                                    ${surat.nama}
+                                </div>
+                            </a>
+                        `;
+                    });
+                }
+            } catch (error) {
+                grid.innerHTML = `<div class="col-span-1 sm:col-span-2 lg:col-span-3 text-center py-4 text-red-600 dark:text-red-400 font-semibold">Gagal memuat data surah.</div>`;
+                console.error('Error fetching surah:', error);
+            }
+        }
+
+        function initThemeToggle() {
+            const toggleBtn = document.getElementById('theme-toggle');
+            const html = document.documentElement;
+
+            toggleBtn.addEventListener('click', () => {
+                html.classList.toggle('dark');
+                if (html.classList.contains('dark')) {
+                    localStorage.theme = 'dark';
+                } else {
+                    localStorage.theme = 'light';
+                }
+            });
+        }
+
+        async function fetchSurah() {
+            const grid = document.getElementById('surah-grid');
+            
+            try {
+                const response = await fetch('https://equran.id/api/v2/surat');
+                const data = await response.json();
+
+                if (data.code === 200) {
+                    grid.innerHTML = '';
+
+                    data.data.forEach(surat => {
+                        grid.innerHTML += `
+                            <a href="/al-quran/detail-surah.html?nomor=${surat.nomor}" class="group bg-white dark:bg-slate-900 p-6 border border-slate-300 dark:border-slate-800 rounded-2xl flex items-center justify-between card-hover-fx hover:border-slate-900 dark:hover:border-slate-100 transition-colors">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-sm font-bold text-slate-800 dark:text-slate-200">
+                                        ${surat.nomor}
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-lg text-slate-900 dark:text-slate-100 group-hover:text-brand-light dark:group-hover:text-brand-dark transition-colors">${surat.namaLatin}</h3>
+                                        <p class="text-xs text-slate-600 dark:text-slate-400 mt-1 tracking-wider font-semibold">${surat.tempatTurun} • ${surat.jumlahAyat} Ayat</p>
+                                    </div>
+                                </div>
+                                <div class="font-arabic text-2xl text-slate-900 dark:text-slate-100 text-right">
+                                    ${surat.nama}
+                                </div>
+                            </a>
+                        `;
+                    });
+                }
+            } catch (error) {
+                grid.innerHTML = `<div class="col-span-1 sm:col-span-2 lg:col-span-3 text-center py-4 text-red-600 dark:text-red-400 font-semibold">Gagal memuat data surah.</div>`;
+                console.error('Error fetching surah:', error);
+            }
+        }
+
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const iconOpen = document.getElementById('menu-icon-open');
+        const iconClose = document.getElementById('menu-icon-close');
+        const mobileLinks = document.querySelectorAll('.mobile-nav-link');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            iconOpen.classList.toggle('hidden');
+            iconClose.classList.toggle('hidden');
+        });
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                iconOpen.classList.remove('hidden');
+                iconClose.classList.add('hidden');
+            });
+        });
+    </script>
+</body>
+</html>

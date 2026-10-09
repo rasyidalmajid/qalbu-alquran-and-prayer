@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qalbu - Baca Al-Quran & Jadwal Shalat</title>
+    
+    <!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Tailwind CSS (CDN for HTML only setup) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                        arabic: ['Noto Naskh Arabic', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            light: '#18181b', // Zinc-900 (hampir hitam)
+                            dark: '#f4f4f5',  // Zinc-100 (hampir putih)
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 antialiased transition-colors duration-300 flex flex-col min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 w-full backdrop-blur-xl bg-slate-50/80 dark:bg-slate-950/80 border-b border-slate-300 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <a href="#" class="flex items-center gap-2 group">
+                <i class="ph-fill ph-book-open-text text-2xl text-brand-light dark:text-brand-dark group-hover:scale-110 transition-transform"></i>
+                <span class="font-bold text-xl tracking-tight text-brand-light dark:text-brand-dark">Qalbu</span>
+            </a>
+            
+            <!-- Menu Desktop -->
+            <div class="hidden md:flex items-center gap-8 text-sm font-semibold">
+                <a href="/al-quran/home-quran.html" class="hover:text-brand-light dark:hover:text-brand-dark transition-colors">Al-Quran</a>
+                <a href="/doa/home-doa.html" class="hover:text-brand-light dark:hover:text-brand-dark transition-colors">Doa Harian</a>
+                <a href="/jadwal-shalat/home-jadwal.html" class="hover:text-brand-light dark:hover:text-brand-dark transition-colors">Jadwal Shalat</a>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <!-- Theme Toggle -->
+                <button id="theme-toggle" class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Dark Mode">
+                    <i class="ph ph-moon text-xl dark:hidden text-slate-800"></i>
+                    <i class="ph ph-sun text-xl hidden dark:block text-amber-300"></i>
+                </button>
+
+                <!-- Tombol Hamburger Mobile -->
+                <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Navigation Menu">
+                    <i id="menu-icon-open" class="ph ph-list text-2xl"></i>
+                    <i id="menu-icon-close" class="ph ph-x text-2xl hidden"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Panel Menu Mobile (Collapse) -->
+        <div id="mobile-menu" class="hidden md:hidden border-t border-slate-300 dark:border-slate-800 bg-slate-50/95 dark:bg-slate-950/95 backdrop-blur-xl px-4 pt-2 pb-4 space-y-1">
+            <a href="/al-quran/home-quran.html" class="mobile-nav-link block px-3 py-2 rounded-lg text-base font-medium hover:bg-slate-200/80 dark:hover:bg-slate-800/80 hover:text-brand-light dark:hover:text-brand-dark transition-colors">Al-Quran</a>
+            <a href="/doa/home-doa.html" class="mobile-nav-link block px-3 py-2 rounded-lg text-base font-medium hover:bg-slate-200/80 dark:hover:bg-slate-800/80 hover:text-brand-light dark:hover:text-brand-dark transition-colors">Doa Harian</a>
+            <a href="/jadwal-shalat/home-jadwal.html" class="mobile-nav-link block px-3 py-2 rounded-lg text-base font-medium hover:bg-slate-200/80 dark:hover:bg-slate-800/80 hover:text-brand-light dark:hover:text-brand-dark transition-colors">Jadwal Shalat</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="max-w-3xl mx-auto px-4 pt-16 pb-16 text-center">
+        <h2 class="text-3xl sm:text-4xl font-bold tracking-tight mb-3 text-slate-900 dark:text-slate-100">
+            Tenangkan pikiran,<br>
+            bersihkan hati.
+        </h2>
+        <p class="text-slate-700 dark:text-slate-300 text-base sm:text-lg max-w-2xl mx-auto mb-8 leading-relaxed font-medium">
+            Baca Al-Quran, temukan kumpulan doa, dan pantau jadwal shalat dengan mudah. Tanpa iklan, tanpa login.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a href="#quran" class="w-full sm:w-auto px-8 py-3.5 bg-brand-light hover:bg-slate-800 text-slate-100 dark:bg-brand-dark dark:hover:bg-slate-200 dark:text-slate-950 font-semibold rounded-full transition-colors flex items-center justify-center gap-2">
+                <i class="ph-bold ph-book-open"></i>
+                Mulai Membaca
+            </a>
+            <div class="relative w-full sm:w-auto">
+                <i class="ph ph-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 dark:text-slate-300"></i>
+                <input type="text" id="search-surah" placeholder="Cari surah (mis: Yasin)..." class="w-full sm:w-72 pl-12 pr-4 py-3.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-full text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-500 transition-all">
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow p-4">
+        <!-- Terakhir Dibaca -->
+        <section id="terakhir-dibaca-container" class="max-w-7xl mx-auto px-4 mb-16 hidden">
+            <div class="bg-slate-200/70 dark:bg-slate-900 rounded-2xl p-6 border border-slate-300 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div>
+                    <span class="text-xs font-bold tracking-widest text-brand-light dark:text-brand-dark">Terakhir Dibaca</span>
+                    <h3 id="last-read-title" class="text-xl font-bold mt-1">Surah Al-Baqarah</h3>
+                    <p id="last-read-ayat" class="text-slate-700 dark:text-slate-300 text-sm">Ayat 15</p>
+                </div>
+                <a href="#lanjutkan" class="px-6 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 font-semibold rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                    Lanjutkan
+                </a>
+            </div>
+        </section>
+
+        <!-- Jadwal Shalat Widget -->
+        <section id="jadwal" class="max-w-7xl mx-auto px-4 mb-24">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold">Jadwal Shalat</h2>
+                <span id="lokasi-jadwal" class="text-sm font-semibold px-3 py-1 bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-full">Lokasi: Salatiga</span>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-6 gap-4" id="jadwal-grid">
+                <!-- Loading State yang sudah berkontras tinggi & ramah dark mode -->
+                <div class="col-span-2 md:col-span-6 text-center py-8 text-slate-700 dark:text-slate-300 font-medium animate-pulse">Memuat jadwal shalat...</div>
+            </div>
+        </section>
+
+        <!-- Surah Populer Grid -->
+        <section id="quran" class="max-w-7xl mx-auto px-4 mb-24">
+            <div class="flex items-end justify-between mb-8">
+                <div>
+                    <h2 class="text-2xl font-bold">Surah Pilihan</h2>
+                    <p class="text-slate-700 dark:text-slate-300 mt-1 font-medium">Surah yang sering dibaca.</p>
+                </div>
+                <a href="/al-quran/home-quran.html" class="text-brand-light dark:text-brand-dark font-bold underline-offset-4 hover:underline hidden sm:block">Lihat Semua 114 Surah</a>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="surah-grid">
+                <!-- Dihasilkan oleh JavaScript -->
+            </div>
+            
+            <div class="mt-8 text-center sm:hidden">
+                <a href="/al-quran/home-quran.html" class="inline-block px-6 py-3 border border-slate-400 dark:border-slate-700 rounded-full font-semibold">Lihat Semua Surah</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-300 dark:border-slate-800 mt-32 py-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <i class="ph-fill ph-book-open-text text-3xl text-slate-400 dark:text-slate-600 mb-4 inline-block"></i>
+            <p class="font-bold text-lg text-brand-light dark:text-brand-dark">Qalbu.</p>
+            <p class="text-slate-700 dark:text-slate-300 text-sm mt-2 font-medium">Sumber teks Al-Quran dari API EQuran.id (Kemenag RI).</p>
+            <p class="text-slate-600 dark:text-slate-400 text-sm mt-8">&copy; 2026 Dibangun untuk kenyamanan membaca.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

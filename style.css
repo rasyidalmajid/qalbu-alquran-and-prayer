@@ -1,0 +1,32 @@
+/* Styling khusus untuk tipografi Arab */
+.font-arabic {
+    font-family: 'Amiri', serif;
+    line-height: 2.2;
+}
+
+/* Memperhalus tampilan scrollbar agar lebih menyatu dengan desain */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+    background: #334155;
+}
+
+/* Utilitas untuk card hover effect (jika dibutuhkan transisi ekstra) */
+.card-hover-fx {
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+}
+
+.card-hover-fx:hover {
+    transform: translateY(-2px);
+}

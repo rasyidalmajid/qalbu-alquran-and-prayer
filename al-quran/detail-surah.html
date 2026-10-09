@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qalbu - Detail Surah</title>
+    
+    <!-- Script Anti-Flash Theme (Mencegah background putih muncul sekejap di mode dark) -->
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        arabic: ['Noto Naskh Arabic', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            light: '#18181b', // Zinc-900 (hampir hitam)
+                            dark: '#f4f4f5',  // Zinc-100 (hampir putih)
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .font-arabic {
+            font-family: 'Amiri', 'Noto Naskh Arabic', 'Traditional Arabic', serif;
+            line-height: 2.4 !important; 
+            letter-spacing: normal !important; 
+            font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+            text-rendering: optimizeLegibility;
+            direction: rtl;
+            unicode-bidi: isolate;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+
+        .card-hover-fx {
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+        }
+
+        /* Custom style untuk daftar surah sidebar agar scrollable */
+        .sidebar-scroll {
+            max-height: calc(100vh - 180px);
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 antialiased transition-colors duration-300 flex flex-col min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 w-full backdrop-blur-xl bg-slate-50/80 dark:bg-slate-950/80 border-b border-slate-300 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <a href="/index.html" class="flex items-center gap-2 group">
+                <i class="ph-fill ph-book-open-text text-2xl text-brand-light dark:text-brand-dark group-hover:scale-110 transition-transform"></i>
+                <span class="font-bold text-xl tracking-tight text-brand-light dark:text-brand-dark">Qalbu</span>
+            </a>
+            
+            <!-- Menu Desktop -->
+            <div class="hidden md:flex items-center gap-8 text-sm font-semibold">
+                <a href="/al-quran/home-quran.html" class="text-brand-light dark:text-brand-dark font-bold underline-offset-4 underline transition-colors">Al-Quran</a>
+                <a href="/doa/home-doa.html" class="hover:text-brand-light dark:hover:text-brand-dark transition-colors">Doa Harian</a>
+                <a href="/jadwal-shalat/home-jadwal.html" class="hover:text-brand-light dark:hover:text-brand-dark transition-colors">Jadwal Shalat</a>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <!-- Theme Toggle -->
+                <button id="theme-toggle" class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Dark Mode">
+                    <i class="ph ph-moon text-xl dark:hidden text-slate-800"></i>
+                    <i class="ph ph-sun text-xl hidden dark:block text-amber-300"></i>
+                </button>
+
+                <!-- Tombol Hamburger Mobile -->
+                <button id="mobile-menu-btn" type="button" class="md:hidden p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Navigation Menu">
+                    <i id="menu-icon-open" class="ph ph-list text-2xl pointer-events-none"></i>
+                    <i id="menu-icon-close" class="ph ph-x text-2xl hidden pointer-events-none"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Panel Menu Mobile -->
+        <div id="mobile-menu" class="hidden md:hidden border-t border-slate-300 dark:border-slate-800 bg-slate-50/95 dark:bg-slate-950/95 backdrop-blur-xl px-4 pt-2 pb-4 space-y-1">
+            <a href="/al-quran/home-quran.html" class="mobile-nav-link block px-3 py-2 rounded-lg text-base font-bold text-brand-light dark:text-brand-dark bg-slate-200/60 dark:bg-slate-900 transition-colors">Al-Quran</a>
+            <a href="/doa/home-doa.html" class="mobile-nav-link block px-3 py-2 rounded-lg text-base font-medium hover:bg-slate-200/80 dark:hover:bg-slate-800/80 hover:text-brand-light dark:hover:text-brand-dark transition-colors">Doa Harian</a>
+            <a href="/jadwal-shalat/home-jadwal.html" class="mobile-nav-link block px-3 py-2 rounded-lg text-base font-medium hover:bg-slate-200/80 dark:hover:bg-slate-800/80 hover:text-brand-light dark:hover:text-brand-dark transition-colors">Jadwal Shalat</a>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- SIDEBAR LEFT: Daftar Surat -->
+            <aside class="lg:col-span-4 xl:col-span-3 space-y-4 sm:block hidden">
+                <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-2xl p-4 sticky top-20">
+                    <h2 class="font-bold text-lg mb-3 px-2 text-slate-900 dark:text-slate-100">Daftar Surat</h2>
+                    
+                    <!-- Search Bar Sidebar -->
+                    <div class="relative mb-4">
+                        <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-600 dark:text-slate-300"></i>
+                        <input type="text" id="search-sidebar" placeholder="Cari surat..." class="w-full pl-9 pr-3 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-500 transition-all">
+                    </div>
+
+                    <!-- Scrollable Surah List -->
+                    <div id="sidebar-surah-list" class="sidebar-scroll space-y-1.5 pr-1">
+                        <div class="text-center py-6 text-slate-700 dark:text-slate-300 font-medium text-sm">Memuat daftar surah...</div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- MAIN SECTION RIGHT: Detail Surah & Ayat -->
+            <section class="lg:col-span-8 xl:col-span-9 space-y-6">
+                
+                <!-- Back Link -->
+                <div>
+                    <a href="/index.html" class="inline-flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:text-brand-light dark:hover:text-brand-dark transition-colors">
+                        <i class="ph ph-arrow-left"></i> Kembali ke Beranda
+                    </a>
+                </div>
+
+                <!-- Surah Header Card -->
+                <div id="surah-header" class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-2xl p-6 relative overflow-hidden">
+                    <div class="animate-pulse space-y-3">
+                        <div class="h-6 bg-slate-300 dark:bg-slate-800 rounded w-1/3"></div>
+                        <div class="h-4 bg-slate-300 dark:bg-slate-800 rounded w-1/4"></div>
+                    </div>
+                </div>
+
+                <!-- Control Bar (Filter & Audio Toolbar) -->
+                <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4 text-sm font-semibold">
+                    <div class="flex items-center gap-4 flex-wrap">
+                        <!-- Qari Select -->
+                        <div class="flex items-center gap-2">
+                            <span class="text-slate-700 dark:text-slate-300 font-semibold">Qari:</span>
+                            <select id="qari-select" class="bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-lg px-2.5 py-1.5 font-medium focus:outline-none focus:ring-2 focus:ring-slate-500">
+                                <option value="05">Misyari Rasyid Al-Afasi</option>
+                                <option value="01">Abdullah Al-Juhany</option>
+                                <option value="02">Abdul Muhsin Al-Qasim</option>
+                                <option value="03">Abdurrahman As-Sudais</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-5">
+                        <!-- Transliterasi Toggle -->
+                        <label class="inline-flex items-center gap-2 cursor-pointer">
+                            <span class="text-slate-700 dark:text-slate-300 font-semibold">Transliterasi</span>
+                            <input type="checkbox" id="toggle-transliterasi" checked class="sr-only peer ">
+                            <div class="relative w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer dark:bg-brand-dark peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-light dark:peer-checked:bg-slate-600"></div>
+                        </label>
+
+                        <!-- Terjemahan Toggle -->
+                        <label class="inline-flex items-center gap-2 cursor-pointer">
+                            <span class="text-slate-700 dark:text-slate-300 font-semibold">Terjemahan</span>
+                            <input type="checkbox" id="toggle-terjemahan" checked class="sr-only peer">
+                            <div class="relative w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer dark:bg-brand-dark peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-light dark:peer-checked:bg-slate-600"></div>
+                        </label>
+
+                        <!-- Play Audio Full -->
+                        <button id="btn-play-full" class="inline-flex items-center gap-2 text-brand-light dark:text-brand-dark hover:opacity-80 font-bold transition-opacity">
+                            <i class="ph-fill ph-play-circle text-xl"></i> Putar Audio Penuh
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Bismillah Card -->
+                <div id="bismillah-container" class="hidden text-center py-6 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-2xl">
+                    <p class="font-arabic text-3xl text-slate-900 dark:text-slate-100">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
+                </div>
+
+                <!-- Ayat List Container -->
+                <div id="ayat-container" class="space-y-4">
+                    <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-2xl p-8 text-center text-slate-700 dark:text-slate-300 font-medium animate-pulse">
+                        Memuat ayat-ayat surah...
+                    </div>
+                </div>
+
+                <!-- Navigation Bottom -->
+                <div class="flex items-center justify-between pt-4">
+                    <div id="prev-surah-btn"></div>
+                    <div id="next-surah-btn"></div>
+                </div>
+
+            </section>
+        </div>
+
+        <!-- Modal Popup Tafsir -->
+        <div id="tafsir-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 sm:p-6">
+            <div id="modal-backdrop" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm transition-opacity duration-300 opacity-0"></div>
+
+            <div id="modal-box" class="relative w-full max-w-2xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-3xl overflow-hidden transform scale-95 opacity-0 transition-all duration-300 z-10 flex flex-col max-h-[90vh]">
+                
+                <!-- Header Modal -->
+                <div class="p-6 border-b border-slate-200 dark:border-slate-800 flex items-start justify-between gap-4">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 flex items-center justify-center text-brand-light dark:text-brand-dark shrink-0">
+                            <i class="ph-fill ph-book-open text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 id="modal-title" class="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+                                Tafsir Al-Fatihah Ayat 1
+                            </h3>
+                            <div class="flex items-center gap-2 mt-1.5">
+                                <span id="modal-badge-surah" class="px-2.5 py-0.5 text-xs font-bold text-slate-700 dark:text-slate-300">
+                                    Al-Fatihah
+                                </span>
+                                <span id="modal-badge-ayat" class="px-2.5 py-0.5 text-xs font-bold text-slate-700 dark:text-slate-300">
+                                    Ayat 1
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button onclick="closeTafsirModal()" class="p-2 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full transition-colors" aria-label="Tutup Modal">
+                        <i class="ph ph-x text-xl"></i>
+                    </button>
+                </div>
+
+                <!-- Body Modal -->
+                <div class="p-6 overflow-y-auto space-y-6 flex-grow">
+                    <div class="bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-2xl p-6 text-right">
+                        <p id="modal-arab-text" class="font-arabic text-3xl sm:text-4xl text-slate-900 dark:text-slate-50 leading-relaxed sm:leading-loose">
+                            بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+                        </p>
+                    </div>
+
+                    <div id="modal-tafsir-content" class="text-sm sm:text-base text-slate-800 dark:text-slate-200 font-medium leading-relaxed space-y-4">
+                        <!-- Teks tafsir dimuat via JavaScript -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-300 dark:border-slate-800 mt-20 py-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <i class="ph-fill ph-book-open-text text-3xl text-slate-400 dark:text-slate-600 mb-4 inline-block"></i>
+            <p class="font-bold text-lg text-brand-light dark:text-brand-dark">Qalbu.</p>
+            <p class="text-slate-700 dark:text-slate-300 text-sm mt-2 font-medium">Sumber teks Al-Quran dari API EQuran.id (Kemenag RI).</p>
+            <p class="text-slate-600 dark:text-slate-400 text-sm mt-8">&copy; 2026 Dibangun untuk kenyamanan membaca.</p>
+        </div>
+    </footer>
+
+    <!-- Audio Player Hidden Element -->
+    <audio id="audio-player" class="hidden"></audio>
+
+    <script>
+        let currentSurahNo = 1;
+        let surahDataList = [];
+        let currentDetailSurah = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initThemeToggle();
+            initMobileMenu();
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const nomorParam = parseInt(urlParams.get('nomor'));
+            if (nomorParam && !isNaN(nomorParam)) {
+                currentSurahNo = nomorParam;
+            }
+
+            fetchSidebarSurah();
+            fetchSurahDetail(currentSurahNo);
+            initEventListeners();
+        });
+
+        function initThemeToggle() {
+            const toggleBtn = document.getElementById('theme-toggle');
+            const html = document.documentElement;
+
+            toggleBtn.addEventListener('click', () => {
+                html.classList.toggle('dark');
+                localStorage.theme = html.classList.contains('dark') ? 'dark' : 'light';
+            });
+        }
+
+        function initMobileMenu() {
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const iconOpen = document.getElementById('menu-icon-open');
+            const iconClose = document.getElementById('menu-icon-close');
+
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                    iconOpen.classList.toggle('hidden');
+                    iconClose.classList.toggle('hidden');
+                });
+            }
+        }
+
+        async function fetchSidebarSurah() {
+            const sidebarList = document.getElementById('sidebar-surah-list');
+            try {
+                const response = await fetch('https://equran.id/api/v2/surat');
+                const data = await response.json();
+
+                if (data.code === 200) {
+                    surahDataList = data.data;
+                    renderSidebarSurah(surahDataList);
+                }
+            } catch (err) {
+                sidebarList.innerHTML = `<div class="text-red-600 dark:text-red-400 text-xs py-4 text-center font-semibold">Gagal memuat daftar surah.</div>`;
+            }
+        }
+
+        function renderSidebarSurah(list) {
+            const sidebarList = document.getElementById('sidebar-surah-list');
+            sidebarList.innerHTML = '';
+
+            list.forEach(surat => {
+                const isActive = surat.nomor === currentSurahNo;
+                const activeClass = isActive 
+                    ? 'bg-slate-200 dark:bg-slate-800 border-slate-900 dark:border-slate-100 text-slate-900 dark:text-slate-100 font-bold' 
+                    : 'bg-transparent border-transparent text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 font-medium';
+
+                sidebarList.innerHTML += `
+                    <a href="?nomor=${surat.nomor}" class="flex items-center justify-between p-3 rounded-xl border ${activeClass} transition-colors group">
+                        <div class="flex items-center gap-3 overflow-hidden">
+                            <div class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-xs font-bold shrink-0 ${isActive ? 'text-slate-900 dark:text-slate-100' : 'text-slate-700 dark:text-slate-300'}">
+                                ${surat.nomor}
+                            </div>
+                            <div class="truncate">
+                                <h4 class="font-bold text-sm truncate group-hover:text-brand-light dark:group-hover:text-brand-dark">${surat.namaLatin}</h4>
+                                <p class="text-[11px] text-slate-600 dark:text-slate-400 tracking-wider font-semibold">${surat.tempatTurun} • ${surat.jumlahAyat} Ayat</p>
+                            </div>
+                        </div>
+                        <span class="font-arabic text-base text-slate-900 dark:text-slate-100 shrink-0 ml-2">${surat.nama}</span>
+                    </a>
+                `;
+            });
+        }
+
+        async function fetchSurahDetail(nomor) {
+            const headerContainer = document.getElementById('surah-header');
+            const ayatContainer = document.getElementById('ayat-container');
+            const bismillahContainer = document.getElementById('bismillah-container');
+
+            try {
+                const response = await fetch(`https://equran.id/api/v2/surat/${nomor}`);
+                const data = await response.json();
+
+                if (data.code === 200) {
+                    currentDetailSurah = data.data;
+
+                    headerContainer.innerHTML = `
+                        <div class="flex items-center justify-between relative z-10">
+                            <div>
+                                <h1 class="text-2xl sm:text-3xl font-bold flex items-center gap-3 text-slate-900 dark:text-slate-100">
+                                    <span>${currentDetailSurah.namaLatin}</span>
+                                    <span class="text-sm font-semibold text-slate-600 dark:text-slate-400">(${currentDetailSurah.arti})</span>
+                                </h1>
+                                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-2 tracking-wider font-semibold">
+                                    ${currentDetailSurah.tempatTurun} • ${currentDetailSurah.jumlahAyat} AYAT
+                                </p>
+                            </div>
+                            <div class="font-arabic text-4xl sm:text-5xl text-slate-900 dark:text-slate-100">
+                                ${currentDetailSurah.nama}
+                            </div>
+                        </div>
+                    `;
+
+                    if (currentDetailSurah.nomor !== 1 && currentDetailSurah.nomor !== 9) {
+                        bismillahContainer.classList.remove('hidden');
+                    } else {
+                        bismillahContainer.classList.add('hidden');
+                    }
+
+                    renderAyatList(currentDetailSurah.ayat);
+                    renderBottomNav();
+                }
+            } catch (err) {
+                ayatContainer.innerHTML = `<div class="text-center py-8 text-red-600 dark:text-red-400 font-semibold">Gagal memuat detail surah. Silakan coba lagi.</div>`;
+            }
+        }
+
+        function renderAyatList(ayatList) {
+            const ayatContainer = document.getElementById('ayat-container');
+            const showTransliterasi = document.getElementById('toggle-transliterasi').checked;
+            const showTerjemahan = document.getElementById('toggle-terjemahan').checked;
+            const selectedQari = document.getElementById('qari-select').value;
+
+            ayatContainer.innerHTML = '';
+
+            ayatList.forEach(item => {
+                const audioUrl = item.audio[selectedQari] || Object.values(item.audio)[0];
+
+                ayatContainer.innerHTML += `
+                    <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-2xl p-6 transition-all" id="ayat-${item.nomorAyat}">
+                        <!-- Top Bar Ayat -->
+                        <div class="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800 mb-6">
+                            <div class="flex items-center gap-3 text-slate-600 dark:text-slate-400">
+                                <button onclick="playAyatAudio('${audioUrl}', ${item.nomorAyat})" class="hover:text-slate-900 dark:hover:text-slate-100 transition-colors p-1" title="Putar Audio">
+                                    <i id="icon-play-${item.nomorAyat}" class="ph-fill ph-play-circle text-2xl"></i>
+                                </button>
+                                <button onclick="copyAyat('${item.teksArab}', '${item.teksLatin}', '${item.teksIndonesia}')" class="hover:text-slate-900 dark:hover:text-slate-100 transition-colors p-1" title="Salin Ayat">
+                                    <i class="ph ph-copy text-xl"></i>
+                                </button>
+                                <button onclick="addLastRead('${item.nomorAyat}', '${currentDetailSurah.nomor}')" class="hover:text-slate-900 dark:hover:text-slate-100 transition-colors p-1" title="Tandai Terakhir Dibaca">
+                                    <i class="ph ph-bookmark"></i>
+                                </button>
+                                <button onclick="openTafsirModal(${currentDetailSurah.nomor}, ${item.nomorAyat}, '${currentDetailSurah.namaLatin.replace(/'/g, "\\'")}')" class="hover:text-slate-900 dark:hover:text-slate-100 transition-colors p-1" title="Lihat Tafsir">
+                                    <i class="ph ph-book-open-text text-xl"></i>
+                                </button>
+                            </div>
+                            <div class="w-9 h-9 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-800 dark:text-slate-200">
+                                ${item.nomorAyat}
+                            </div>
+                        </div>
+
+                        <!-- Teks Arab -->
+                        <div class="text-right my-6">
+                            <p class="font-arabic text-3xl sm:text-4xl text-slate-900 dark:text-slate-50 leading-relaxed sm:leading-loose">
+                                ${item.teksArab}
+                            </p>
+                        </div>
+
+                        <!-- Transliterasi -->
+                        ${showTransliterasi ? `
+                            <p class="text-sm text-slate-800 dark:text-slate-200 font-semibold italic mb-2">
+                                ${item.teksLatin}
+                            </p>
+                        ` : ''}
+
+                        <!-- Terjemahan -->
+                        ${showTerjemahan ? `
+                            <p class="text-sm text-slate-700 dark:text-slate-300 font-medium leading-relaxed">
+                                ${item.teksIndonesia}
+                            </p>
+                        ` : ''}
+                    </div>
+                `;
+            });
+        }
+
+        async function openTafsirModal(nomorSurah, nomorAyat, namaSurah) {
+            const modal = document.getElementById('tafsir-modal');
+            const backdrop = document.getElementById('modal-backdrop');
+            const modalBox = document.getElementById('modal-box');
+            
+            document.getElementById('modal-title').innerText = `Tafsir ${namaSurah} Ayat ${nomorAyat}`;
+            document.getElementById('modal-badge-surah').innerText = namaSurah;
+            document.getElementById('modal-badge-ayat').innerText = `Ayat ${nomorAyat}`;
+            
+            document.getElementById('modal-arab-text').innerText = '...';
+            document.getElementById('modal-tafsir-content').innerHTML = `
+                <div class="animate-pulse space-y-3 py-4">
+                    <div class="h-4 bg-slate-300 dark:bg-slate-800 rounded w-full"></div>
+                    <div class="h-4 bg-slate-300 dark:bg-slate-800 rounded w-5/6"></div>
+                    <div class="h-4 bg-slate-300 dark:bg-slate-800 rounded w-4/6"></div>
+                </div>
+            `;
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                backdrop.classList.remove('opacity-0');
+                modalBox.classList.remove('opacity-0', 'scale-95');
+                modalBox.classList.add('opacity-100', 'scale-100');
+            }, 10);
+
+            try {
+                const res = await fetch(`https://equran.id/api/v2/tafsir/${nomorSurah}`);
+                const result = await res.json();
+
+                if (result.code === 200) {
+                    const tafsirAyat = result.data.tafsir.find(t => t.ayat === nomorAyat);
+                    
+                    if (currentDetailSurah) {
+                        const ayatObj = currentDetailSurah.ayat.find(a => a.nomorAyat === nomorAyat);
+                        if (ayatObj) {
+                            document.getElementById('modal-arab-text').innerText = ayatObj.teksArab;
+                        }
+                    }
+
+                    if (tafsirAyat) {
+                        const paragraphs = tafsirAyat.teks.split('\n').filter(p => p.trim() !== '');
+                        document.getElementById('modal-tafsir-content').innerHTML = paragraphs
+                            .map(p => `<p class="leading-relaxed text-slate-800 dark:text-slate-200 font-medium">${p}</p>`)
+                            .join('');
+                    } else {
+                        document.getElementById('modal-tafsir-content').innerText = 'Tafsir untuk ayat ini tidak ditemukan.';
+                    }
+                }
+            } catch (error) {
+                document.getElementById('modal-tafsir-content').innerHTML = '<p class="text-red-600 dark:text-red-400 font-semibold">Gagal memuat teks tafsir.</p>';
+            }
+        }
+
+        function closeTafsirModal() {
+            const backdrop = document.getElementById('modal-backdrop');
+            const modalBox = document.getElementById('modal-box');
+            const modal = document.getElementById('tafsir-modal');
+
+            backdrop.classList.add('opacity-0');
+            modalBox.classList.remove('opacity-100', 'scale-100');
+            modalBox.classList.add('opacity-0', 'scale-95');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        document.getElementById('modal-backdrop').addEventListener('click', closeTafsirModal);
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeTafsirModal();
+        });
+
+        function addLastRead(ayat, number){
+            alert("Berhasil Menyimpan Terakhir Dibaca");
+            localStorage.setItem("qalbu_last_read", JSON.stringify({
+                ayatNumber: ayat,
+                surahName: currentDetailSurah.namaLatin,
+                surahNumber: number
+            }));
+        }
+
+        function renderBottomNav() {
+            const prevBtn = document.getElementById('prev-surah-btn');
+            const nextBtn = document.getElementById('next-surah-btn');
+
+            prevBtn.innerHTML = '';
+            nextBtn.innerHTML = '';
+
+            if (currentDetailSurah.suratSebelumnya) {
+                prevBtn.innerHTML = `
+                    <a href="?nomor=${currentDetailSurah.suratSebelumnya.nomor}" class="inline-flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 px-4 py-2.5 rounded-xl font-bold text-sm text-slate-900 dark:text-slate-100 hover:border-slate-900 dark:hover:border-slate-100 transition-colors">
+                        <i class="ph ph-arrow-left"></i> ${currentDetailSurah.suratSebelumnya.namaLatin}
+                    </a>
+                `;
+            }
+
+            if (currentDetailSurah.suratSelanjutnya) {
+                nextBtn.innerHTML = `
+                    <a href="?nomor=${currentDetailSurah.suratSelanjutnya.nomor}" class="inline-flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 px-4 py-2.5 rounded-xl font-bold text-sm text-slate-900 dark:text-slate-100 hover:border-slate-900 dark:hover:border-slate-100 transition-colors">
+                        ${currentDetailSurah.suratSelanjutnya.namaLatin} <i class="ph ph-arrow-right"></i>
+                    </a>
+                `;
+            }
+        }
+
+        function initEventListeners() {
+            document.getElementById('search-sidebar').addEventListener('input', (e) => {
+                const q = e.target.value.toLowerCase();
+                const filtered = surahDataList.filter(s => s.namaLatin.toLowerCase().includes(q));
+                renderSidebarSurah(filtered);
+            });
+
+            document.getElementById('toggle-transliterasi').addEventListener('change', () => {
+                if (currentDetailSurah) renderAyatList(currentDetailSurah.ayat);
+            });
+
+            document.getElementById('toggle-terjemahan').addEventListener('change', () => {
+                if (currentDetailSurah) renderAyatList(currentDetailSurah.ayat);
+            });
+
+            document.getElementById('qari-select').addEventListener('change', () => {
+                if (currentDetailSurah) renderAyatList(currentDetailSurah.ayat);
+            });
+
+            document.getElementById('btn-play-full').addEventListener('click', () => {
+                if (!currentDetailSurah) return;
+                const selectedQari = document.getElementById('qari-select').value;
+                const fullAudioUrl = currentDetailSurah.audioFull[selectedQari] || Object.values(currentDetailSurah.audioFull)[0];
+                
+                const audioPlayer = document.getElementById('audio-player');
+                audioPlayer.src = fullAudioUrl;
+                audioPlayer.play();
+                alert(`Memutar audio penuh Surah ${currentDetailSurah.namaLatin}`);
+            });
+        }
+
+        function playAyatAudio(url, nomorAyat) {
+            const audioPlayer = document.getElementById('audio-player');
+            audioPlayer.src = url;
+            audioPlayer.play();
+        }
+
+        function copyAyat(arab, latin, terjemahan) {
+            const textToCopy = `${arab}\n\n${latin}\n\nArtinya: "${terjemahan}"`;
+            navigator.clipboard.writeText(textToCopy);
+            alert('Teks ayat berhasil disalin!');
+        }
+    </script>
+</body>
+</html>

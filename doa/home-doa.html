@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qalbu - Doa Harian & Dzikir</title>
+    
+    <!-- Script Anti-Flash Theme -->
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400..700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                        arabic: ['Noto Naskh Arabic', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            light: '#18181b', // Zinc-900
+                            dark: '#f4f4f5',  // Zinc-100
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .font-arabic {
+            font-family: 'Noto Naskh Arabic', 'Amiri', serif;
+            line-height: 2.4 !important;
+            letter-spacing: normal !important;
+            font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+            text-rendering: optimizeLegibility;
+            direction: rtl;
+            unicode-bidi: isolate;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+
+        .card-hover-fx {
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .card-hover-fx:hover {
+            transform: translateY(-2px);
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 antialiased transition-colors duration-300 flex flex-col min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 w-full backdrop-blur-xl bg-slate-50/80 dark:bg-slate-950/80 border-b border-slate-300 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <a href="/index.html" class="flex items-center gap-2 group">
+                <i class="ph-fill ph-book-open-text text-2xl text-brand-light dark:text-brand-dark group-hover:scale-110 transition-transform"></i>
+                <span class="font-bold text-xl tracking-tight text-brand-light dark:text-brand-dark">Qalbu</span>
+            </a>
+            
+            <div class="hidden md:flex items-center gap-8 text-sm font-semibold">
+                <a href="/al-quran/home-quran.html" class="hover:text-brand-light dark:hover:text-brand-dark transition-colors">Al-Quran</a>
+                <a href="#" class="text-brand-light dark:text-brand-dark font-bold underline-offset-4 underline transition-colors">Doa Harian</a>
+                <a href="/jadwal-shalat/home-jadwal.html" class="hover:text-brand-light dark:hover:text-brand-dark transition-colors">Jadwal Shalat</a>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <button id="theme-toggle" class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Dark Mode">
+                    <i class="ph ph-moon text-xl dark:hidden text-slate-800"></i>
+                    <i class="ph ph-sun text-xl hidden dark:block text-amber-300"></i>
+                </button>
+
+                <button id="mobile-menu-btn" type="button" class="relative z-10 md:hidden p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors cursor-pointer" aria-label="Toggle Navigation Menu">
+                    <i id="menu-icon-open" class="ph ph-list text-2xl pointer-events-none"></i>
+                    <i id="menu-icon-close" class="ph ph-x text-2xl hidden pointer-events-none"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden border-t border-slate-300 dark:border-slate-800 bg-slate-50/95 dark:bg-slate-950/95 backdrop-blur-xl px-4 pt-2 pb-4 space-y-1">
+            <a href="/al-quran/home-quran.html" class="mobile-nav-link block px-3 py-2 rounded-lg text-base font-medium hover:bg-slate-200/80 dark:hover:bg-slate-800/80 hover:text-brand-light dark:hover:text-brand-dark transition-colors">Al-Quran</a>
+            <a href="/doa/home-doa.html" class="mobile-nav-link block px-3 py-2 rounded-lg text-base font-bold text-brand-light dark:text-brand-dark bg-slate-200/60 dark:bg-slate-900 transition-colors">Doa Harian</a>
+            <a href="/jadwal-shalat/home-jadwal.html" class="mobile-nav-link block px-3 py-2 rounded-lg text-base font-medium hover:bg-slate-200/80 dark:hover:bg-slate-800/80 hover:text-brand-light dark:hover:text-brand-dark transition-colors">Jadwal Shalat</a>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <header class="max-w-4xl mx-auto px-4 pt-16 pb-10 text-center">        
+        <h2 class="text-3xl sm:text-4xl font-bold tracking-tight mb-3 text-slate-900 dark:text-slate-100">
+            Kumpulan Doa & Dzikir Harian
+        </h2>
+        <p class="text-slate-700 dark:text-slate-300 text-base sm:text-lg max-w-2xl mx-auto mb-8 leading-relaxed font-medium">
+            Temukan kumpulan doa harian shahih, dzikir, serta bacaan ibadah lengkap beserta teks Arab, latin, dan artinya.
+        </p>
+
+        <!-- Search Bar -->
+        <div class="relative max-w-xl mx-auto mb-8">
+            <i class="ph ph-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 dark:text-slate-300 text-lg"></i>
+            <input type="text" id="search-doa" placeholder="Cari doa (misal: sebelum tidur, makan, sapu jagat)..." class="w-full pl-11 pr-4 py-3.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-full shadow-sm text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-500 transition-all text-sm font-medium">
+        </div>
+
+        <!-- Filter Kategori Tabs -->
+        <div id="category-tabs" class="flex flex-col sm:flex-row items-center justify-center gap-3 overflow-x-auto no-scrollbar py-2 px-1">
+            <div class="w-full max-w-xs">
+                <div class="relative">
+                    <select id="category-filter" onchange="applyFilters()" class="w-full appearance-none bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-sm font-semibold rounded-xl px-4 py-3 pr-10 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-all cursor-pointer">
+                        <option value="Semua Kategori">Semua Kategori</option>
+                        <option value="Doa Sebelum dan Sesudah Tidur">Doa Sebelum dan Sesudah Tidur</option>
+                        <option value="Doa di Kamar Mandi">Doa di Kamar Mandi</option>
+                        <option value="Doa Saat Wudhu">Doa Saat Wudhu</option>
+                        <option value="Doa Berpakaian">Doa Berpakaian</option>
+                        <option value="Doa Perlindungan">Doa Perlindungan</option>
+                        <option value="Doa Menghadapi Fenomena Alam">Doa Menghadapi Fenomena Alam</option>
+                        <option value="Doa Pernikahan">Doa Pernikahan</option>
+                        <option value="Doa Saat Sakit">Doa Saat Sakit</option>
+                        <option value="Doa untuk Orang Sakit">Doa untuk Orang Sakit</option>
+                        <option value="Doa Menjelang Wafat">Doa Menjelang Wafat</option>
+                        <option value="Doa Jenazah">Doa Jenazah</option>
+                        <option value="Doa Saat Sedih dan Sulit">Doa Saat Sedih dan Sulit</option>
+                        <option value="Doa Saat Mendapat Kabar">Doa Saat Mendapat Kabar</option>
+                        <option value="Doa Terkait Harta dan Hutang">Doa Terkait Harta dan Hutang</option>
+                        <option value="Doa Perjalanan">Doa Perjalanan</option>
+                        <option value="Doa Berlindung dari setan">Doa Berlindung dari setan</option>
+                        <option value="Doa memohon surga dan berlindung dari neraka">Doa memohon surga dan berlindung dari neraka</option>
+                        <option value="Doa memohon akhlak mulia">Doa memohon akhlak mulia</option>
+                        <option value="Doa Terkait Orang Tua">Doa Terkait Orang Tua</option>
+                        <option value="Doa Terkait Istri Dan Anak">Doa Terkait Istri Dan Anak</option>
+                        <option value="Doa Kepada Anak Yang Baru Lahir">Doa Kepada Anak Yang Baru Lahir</option>
+                        <option value="Doa Memohon Keteguhan Hati">Doa Memohon Keteguhan Hati</option>
+                        <option value="Doa Memohon Ampun, Rahmat Dan Kebaikan Lainnya">Doa Memohon Ampun, Rahmat Dan Kebaikan Lainnya</option>
+                        <option value="Doa Berlindung Dari Syirik">Doa Berlindung Dari Syirik</option>
+                        <option value="Doa Berlindung Dari Empat Hal">Doa Berlindung Dari Empat Hal</option>
+                        <option value="Doa Berlindung Dari Kecelakaan Dan Kematian Yang Mengerikan">Doa Berlindung Dari Kecelakaan Dan Kematian Yang Mengerikan</option>
+                        <option value="Doa Memohon Ilmu">Doa Memohon Ilmu</option>
+                        <option value="Doa Memohon Kebaikan">Doa Memohon Kebaikan</option>
+                        <option value="Doa Keluar Dan Masuk Rumah">Doa Keluar Dan Masuk Rumah</option>
+                        <option value="Bacaan Terkait Adzan">Bacaan Terkait Adzan</option>
+                        <option value="Doa Terkait Makan">Doa Terkait Makan</option>
+                        <option value="Doa Terkait Puasa">Doa Terkait Puasa</option>
+                        <option value="Doa Terkait Ramadhan">Doa Terkait Ramadhan</option>
+                        <option value="Ucapan Terkait Hari Raya.">Ucapan Terkait Hari Raya.</option>
+                        <option value="Doa Berlindung Dari Keburukan">Doa Berlindung Dari Keburukan</option>
+                        <option value="Doa Memohon Kebaikan Dan Berlindung Dari Keburukan">Doa Memohon Kebaikan Dan Berlindung Dari Keburukan</option>
+                        <option value="Bacaan Bila Kagum Terhadap Sesuatu">Bacaan Bila Kagum Terhadap Sesuatu</option>
+                        <option value="Beberapa Adab Dan Keutamaan">Beberapa Adab Dan Keutamaan</option>
+                        <option value="Istighfar Dan Taubat">Istighfar Dan Taubat</option>
+                        <option value="Lafal Dzikir Dan Keutamaannya">Lafal Dzikir Dan Keutamaannya</option>
+                        <option value="Doa Terkait Majelis">Doa Terkait Majelis</option>
+                        <option value="Doa Bertemu Musuh Dan Penguasa">Doa Bertemu Musuh Dan Penguasa</option>
+                        <option value="Doa Berlindung Dari Orang Zalim Dan Orang Kafir">Doa Berlindung Dari Orang Zalim Dan Orang Kafir</option>
+                        <option value="Beberapa Doa Terkait Shalat">Beberapa Doa Terkait Shalat</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-700 dark:text-slate-300">
+                        <i class="ph ph-caret-down text-lg"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="w-full max-w-xs">
+                <div class="relative">
+                    <select id="tag-filter" onchange="applyFilters()" class="w-full appearance-none bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-sm font-semibold rounded-xl px-4 py-3 pr-10 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-all cursor-pointer">
+                        <option value="Semua Tag">Semua Tag</option>
+                        <option value="tidur">tidur</option>
+                        <option value="malam">malam</option>
+                        <option value="kamar mandi">kamar mandi</option>
+                        <option value="wudhu">wudhu</option>
+                        <option value="pakaian">pakaian</option>
+                        <option value="perlindungan">perlindungan</option>
+                        <option value="keburukan">keburukan</option>
+                        <option value="sifat buruk">sifat buruk</option>
+                        <option value="syirik">syirik</option>
+                        <option value="umum">umum</option>
+                        <option value="sakit">sakit</option>
+                        <option value="jenazah">jenazah</option>
+                        <option value="sedih">sedih</option>
+                        <option value="sulit">sulit</option>
+                        <option value="musibah">musibah</option>
+                        <option value="kabar">kabar</option>
+                        <option value="hutang">hutang</option>
+                        <option value="rezeki">rezeki</option>
+                        <option value="harta">harta</option>
+                        <option value="perjalanan">perjalanan</option>
+                        <option value="ampunan">ampunan</option>
+                        <option value="orang tua">orang tua</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-700 dark:text-slate-300">
+                        <i class="ph ph-caret-down text-lg"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+        
+        <!-- Doa Grid Container -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="doa-grid">
+            <div class="col-span-full text-center py-16 text-slate-700 dark:text-slate-300 font-medium" id="loading-indicator">
+                <i class="ph-fill ph-spinner animate-spin text-3xl mb-3 inline-block"></i>
+                <p class="text-sm">Memuat kumpulan doa...</p>
+            </div>
+        </div>
+
+        <!-- Elemen Pemicu (Sentinel) untuk Lazy Loading Infinite Scroll -->
+        <div id="scroll-sentinel" class="py-10 text-center text-slate-500 dark:text-slate-400 hidden">
+            <i class="ph-fill ph-spinner animate-spin text-2xl mb-1 inline-block"></i>
+            <p class="text-xs font-semibold">Memuat doa lainnya...</p>
+        </div>
+
+    </main>
+
+    <!-- Modal Detail Doa -->
+    <div id="doa-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 sm:p-6">
+        <div id="modal-backdrop" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm transition-opacity duration-300 opacity-0"></div>
+
+        <div id="modal-box" class="relative w-full max-w-2xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-3xl shadow-2xl overflow-hidden transform scale-95 opacity-0 transition-all duration-300 z-10 flex flex-col max-h-[90vh]">
+            <div class="p-6 border-b border-slate-200 dark:border-slate-800 flex items-start justify-between gap-4">
+                <div>
+                    <span id="modal-category" class="py-0.5 text-xs font-bold text-brand-light dark:text-brand-dark tracking-wider mb-2 inline-block">
+                        Doa Harian
+                    </span>
+                    <h3 id="modal-title" class="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+                        Nama Doa
+                    </h3>
+                </div>
+                
+                <button onclick="closeDoaModal()" class="p-2 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full transition-colors" aria-label="Tutup Modal">
+                    <i class="ph ph-x text-xl"></i>
+                </button>
+            </div>
+
+            <div class="p-6 overflow-y-auto space-y-6 flex-grow">
+                <div class="bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-2xl p-6 text-right">
+                    <p id="modal-arab" class="font-arabic text-3xl sm:text-4xl text-slate-900 dark:text-slate-50 leading-relaxed sm:leading-loose">
+                        ...
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="text-xs font-bold tracking-wider text-slate-600 dark:text-slate-400 mb-1">Latin</h4>
+                    <p id="modal-latin" class="text-sm text-slate-800 dark:text-slate-200 font-semibold italic">
+                        ...
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="text-xs font-bold tracking-wider text-slate-600 dark:text-slate-400 mb-1">Artinya</h4>
+                    <p id="modal-terjemahan" class="text-sm text-slate-800 dark:text-slate-200 font-medium leading-relaxed">
+                        ...
+                    </p>
+                </div>
+
+                <div id="modal-riwayat-container" class="border-t border-slate-200 dark:border-slate-800 pt-4">
+                    <p id="modal-riwayat" class="text-xs text-slate-600 dark:text-slate-400 italic font-medium">
+                        ...
+                    </p>
+                </div>
+            </div>
+
+            <div class="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/80 flex justify-end gap-2">
+                <button id="modal-copy-btn" class="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-light hover:bg-slate-800 text-slate-100 dark:bg-brand-dark dark:hover:bg-slate-200 dark:text-slate-950 rounded-xl text-sm font-bold transition-colors">
+                    <i class="ph ph-copy text-lg"></i> Salin Doa
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-300 dark:border-slate-800 mt-20 py-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <i class="ph-fill ph-book-open-text text-3xl text-slate-400 dark:text-slate-600 mb-4 inline-block"></i>
+            <p class="font-bold text-lg text-brand-light dark:text-brand-dark">Qalbu.</p>
+            <p class="text-slate-700 dark:text-slate-300 text-sm mt-2 font-medium">Kumpulan Doa Harian & Dzikir Shahih.</p>
+            <p class="text-slate-600 dark:text-slate-400 text-sm mt-8">&copy; 2026 Dibangun untuk kenyamanan ibadah.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic dengan Lazy Loading Scroll -->
+    <script>
+        let doaList = [];               // Semua data master dari API
+        let filteredDoaList = [];       // Hasil filter pencarian/kategori
+        
+        // --- Konfigurasi Lazy Loading ---
+        let currentPage = 1;
+        const itemsPerPage = 12;        // Muat 12 doa per batch scroll
+        let scrollObserver = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initThemeToggle();
+            initMobileMenu();
+            fetchDoaData();
+            initSearchAndFilter();
+            initLazyLoadObserver();
+        });
+
+        function initThemeToggle() {
+            const toggleBtn = document.getElementById('theme-toggle');
+            const html = document.documentElement;
+
+            toggleBtn.addEventListener('click', () => {
+                html.classList.toggle('dark');
+                localStorage.theme = html.classList.contains('dark') ? 'dark' : 'light';
+            });
+        }
+
+        function initMobileMenu() {
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const iconOpen = document.getElementById('menu-icon-open');
+            const iconClose = document.getElementById('menu-icon-close');
+
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    mobileMenu.classList.toggle('hidden');
+                    iconOpen.classList.toggle('hidden');
+                    iconClose.classList.toggle('hidden');
+                });
+            }
+        }
+
+        async function fetchDoaData() {
+            try {
+                const response = await fetch('https://equran.id/api/doa');
+                if (!response.ok) throw new Error("Gagal mengambil data");
+
+                const data = await response.json();
+                if (data.code === 200 || Array.isArray(data.data)) {
+                    doaList = data.data || data;
+                } else {
+                    throw new Error("Format data tidak sesuai");
+                }
+            } catch (error) {
+                console.warn('Menggunakan fallback data lokal doa:', error);
+                doaList = getFallbackDoa();
+            } finally {
+                filteredDoaList = [...doaList];
+                resetAndRenderGrid();
+            }
+        }
+
+        // --- Inisialisasi IntersectionObserver untuk Lazy Loading ---
+        function initLazyLoadObserver() {
+            const sentinel = document.getElementById('scroll-sentinel');
+
+            scrollObserver = new IntersectionObserver((entries) => {
+                const entry = entries[0];
+                if (entry.isIntersecting) {
+                    // Jika elemen sentinel terlihat di layar & masih ada data sisa, muat halaman berikutnya
+                    if ((currentPage * itemsPerPage) < filteredDoaList.length) {
+                        currentPage++;
+                        renderNextBatch();
+                    } else {
+                        // Jika semua data sudah selesai dimuat, sembunyikan spinner sentinel
+                        sentinel.classList.add('hidden');
+                    }
+                }
+            }, {
+                rootMargin: '200px' // Mulai render 200px sebelum user mencapai bagian paling bawah
+            });
+
+            scrollObserver.observe(sentinel);
+        }
+
+        // Reset state pagination ketika melakukan search/filter baru
+        function resetAndRenderGrid() {
+            currentPage = 1;
+            const grid = document.getElementById('doa-grid');
+            grid.innerHTML = '';
+
+            if (filteredDoaList.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-12 text-slate-700 dark:text-slate-300 font-medium">
+                        <i class="ph ph-magnifying-glass text-4xl mb-2 inline-block"></i>
+                        <p class="text-sm font-semibold">Doa tidak ditemukan.</p>
+                    </div>
+                `;
+                document.getElementById('scroll-sentinel').classList.add('hidden');
+                return;
+            }
+
+            renderNextBatch();
+        }
+
+        // Render batch item doa berikutnya
+        function renderNextBatch() {
+            const grid = document.getElementById('doa-grid');
+            const sentinel = document.getElementById('scroll-sentinel');
+
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = currentPage * itemsPerPage;
+            const batchItems = filteredDoaList.slice(startIndex, endIndex);
+
+            batchItems.forEach((doa) => {
+                const globalIndex = doaList.findIndex(d => d.id === doa.id || d.nama === doa.nama);
+                const safeNama = (doa.nama || 'Doa').replace(/'/g, "\\'");
+                const categoryLabel = doa.grup || 'Harian';
+                const tagLabel = doa.tag || 'umum';
+
+                const cardHTML = `
+                    <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl p-6 flex flex-col justify-between card-hover-fx hover:border-slate-900 dark:hover:border-slate-100 transition-all">
+                        <div>
+                            <div class="mb-2 border-b-4 border-slate-200 dark:border-slate-800 pb-2">
+                                <h3 class="font-bold text-lg text-slate-900 dark:text-slate-100 line-clamp-2">
+                                    ${doa.nama}
+                                </h3>
+                                <span class="py-0.5 text-[12px] text-brand-light dark:text-brand-dark mb-4 block">
+                                    ${categoryLabel}
+                                </span>
+                            </div>
+                        
+                            <div class="text-right my-4">
+                                <p class="font-arabic text-2xl text-slate-900 dark:text-slate-50 line-clamp-2">
+                                    ${doa.ar}
+                                </p>
+                            </div>
+
+                            <p class="text-xs text-slate-700 dark:text-slate-300 font-medium line-clamp-2 leading-relaxed mb-6">
+                                ${doa.idn}
+                            </p>
+
+                            <span class="text-[12px] font-bold text-slate-600 dark:text-slate-400 tracking-wider">
+                                Tag: ${tagLabel}
+                            </span>
+                        </div>
+
+                        <div class="pt-4 border-t border-slate-200 dark:border-slate-800 mt-4">
+                            <button onclick="openDoaModal(${globalIndex >= 0 ? globalIndex : 0})" class="w-full py-2.5 px-4 rounded-xl bg-slate-100 dark:bg-slate-800/80 hover:bg-slate-900 hover:text-slate-100 dark:hover:bg-slate-100 dark:hover:text-slate-900 text-slate-900 dark:text-slate-100 text-xs font-bold transition-all flex items-center justify-center gap-2 group">
+                                <span>Baca Selengkapnya</span>
+                                <i class="ph ph-arrow-right group-hover:translate-x-0.5 transition-transform"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                grid.insertAdjacentHTML('beforeend', cardHTML);
+            });
+
+            // Tampilkan atau sembunyikan spinner indikator sesuai ketersediaan data sisa
+            if (endIndex < filteredDoaList.length) {
+                sentinel.classList.remove('hidden');
+            } else {
+                sentinel.classList.add('hidden');
+            }
+        }
+
+        function initSearchAndFilter() {
+            const searchInput = document.getElementById('search-doa');
+            let timeoutId;
+
+            searchInput.addEventListener('input', () => {
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => {
+                    applyFilters();
+                }, 300);
+            });
+        }
+
+        function applyFilters() {
+            const query = document.getElementById('search-doa').value.toLowerCase();
+            const category = document.getElementById('category-filter').value.toLowerCase();
+            const tag = document.getElementById('tag-filter').value.toLowerCase();
+
+            filteredDoaList = doaList.filter(doa => {
+                const matchesQuery = (doa.nama && doa.nama.toLowerCase().includes(query)) || (doa.idn && doa.idn.toLowerCase().includes(query));
+                const matchesCategory = category === 'semua kategori' || (doa.grup && doa.grup.toLowerCase() === category);
+                const matchesTag = tag === 'semua tag' || (doa.tag && doa.tag.toLowerCase().includes(tag));
+                return matchesQuery && matchesCategory && matchesTag;
+            });
+
+            resetAndRenderGrid();
+        }
+
+        // Modal Functions
+        function openDoaModal(index) {
+            const item = doaList[index];
+            if (!item) return;
+
+            const modal = document.getElementById('doa-modal');
+            const backdrop = document.getElementById('modal-backdrop');
+            const modalBox = document.getElementById('modal-box');
+
+            document.getElementById('modal-title').innerText = item.nama;
+            document.getElementById('modal-category').innerText = item.grup || 'Doa Harian';
+            document.getElementById('modal-arab').innerText = item.ar;
+            document.getElementById('modal-latin').innerText = item.tr || item.latin || '-';
+            document.getElementById('modal-terjemahan').innerText = item.idn || item.terjemahan;
+            document.getElementById('modal-riwayat').innerText = item.tentang || item.riwayat || 'HR. Bukhari & Muslim';
+
+            const safeNama = (item.nama).replace(/'/g, "\\'");
+            document.getElementById('modal-copy-btn').onclick = () => {
+                handleCopyDoa(safeNama, item.ar, item.idn || item.terjemahan);
+            };
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                backdrop.classList.remove('opacity-0');
+                modalBox.classList.remove('opacity-0', 'scale-95');
+                modalBox.classList.add('opacity-100', 'scale-100');
+            }, 10);
+        }
+
+        function closeDoaModal() {
+            const backdrop = document.getElementById('modal-backdrop');
+            const modalBox = document.getElementById('modal-box');
+            const modal = document.getElementById('doa-modal');
+
+            backdrop.classList.add('opacity-0');
+            modalBox.classList.remove('opacity-100', 'scale-100');
+            modalBox.classList.add('opacity-0', 'scale-95');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        document.getElementById('modal-backdrop').addEventListener('click', closeDoaModal);
+
+        function handleCopyDoa(nama, arab, terjemahan) {
+            const textToCopy = `${nama}\n\n${arab}\n\nArtinya: "${terjemahan}"\n\n(Dikutip dari Aplikasi Qalbu)`;
+            navigator.clipboard.writeText(textToCopy);
+            alert('Doa berhasil disalin!');
+        }
+
+        function getFallbackDoa() {
+            return [
+                {
+                    id: 1,
+                    nama: "Doa Sebelum Tidur",
+                    grup: "Doa Sebelum dan Sesudah Tidur",
+                    tag: "tidur",
+                    ar: "بِسْمِكَ اللّهُمَّ اَحْيَا وَاَمُوْتُ",
+                    tr: "Bismikallahumma ahyaa wa amuut.",
+                    idn: "Dengan nama-Mu ya Allah aku hidup dan dengan nama-Mu aku mati.",
+                    tentang: "HR. Bukhari dan Muslim"
+                },
+                {
+                    id: 2,
+                    nama: "Doa Bangun Tidur",
+                    grup: "Doa Sebelum dan Sesudah Tidur",
+                    tag: "tidur",
+                    ar: "اَلْحَمْدُ للّهِ الَّذِيْ اَحْيَانَا بَعْدَ مَا اَمَاتَنَا وَاِلَيْهِ النُّشُوْرُ",
+                    tr: "Alhamdu lillahilladzii ahyaana ba'da maa amaatana wa ilaihin nusyuur.",
+                    idn: "Segala puji bagi Allah yang telah menghidupkan kami setelah mematikan kami dan kepada-Nya kami dibangkitkan.",
+                    tentang: "HR. Bukhari"
+                }
+            ];
+        }
+    </script>
+</body>
+</html>

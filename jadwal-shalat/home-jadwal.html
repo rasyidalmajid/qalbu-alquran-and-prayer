@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qalbu - Jadwal Shalat Lengkap</title>
+    
+    <!-- Script Anti-Flash Theme (Mencegah background putih muncul sekejap di mode dark) -->
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Tailwind CSS (CDN for HTML only setup) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                        arabic: ['Noto Naskh Arabic', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            light: '#18181b', // Zinc-900 (hampir hitam)
+                            dark: '#f4f4f5',  // Zinc-100 (hampir putih)
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+        .card-hover-fx {
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+        .card-hover-fx:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 antialiased transition-colors duration-300 flex flex-col min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 w-full backdrop-blur-xl bg-slate-50/80 dark:bg-slate-950/80 border-b border-slate-300 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <a href="/index.html" class="flex items-center gap-2 group">
+                <i class="ph-fill ph-book-open-text text-2xl text-brand-light dark:text-brand-dark group-hover:scale-110 transition-transform"></i>
+                <span class="font-bold text-xl tracking-tight text-brand-light dark:text-brand-dark">Qalbu</span>
+            </a>
+            
+            <!-- Menu Desktop -->
+            <div class="hidden md:flex items-center gap-8 text-sm font-semibold">
+                <a href="/al-quran/home-quran.html" class="hover:text-brand-light dark:hover:text-brand-dark transition-colors">Al-Quran</a>
+                <a href="/doa/home-doa.html" class="hover:text-brand-light dark:hover:text-brand-dark transition-colors">Doa Harian</a>
+                <a href="/jadwal-shalat/home-jadwal.html" class="text-brand-light dark:text-brand-dark font-bold underline-offset-4 underline transition-colors">Jadwal Shalat</a>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <!-- Theme Toggle -->
+                <button id="theme-toggle" class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Dark Mode">
+                    <i class="ph ph-moon text-xl dark:hidden text-slate-800"></i>
+                    <i class="ph ph-sun text-xl hidden dark:block text-amber-300"></i>
+                </button>
+
+                <!-- Tombol Hamburger Mobile -->
+                <button id="mobile-menu-btn" type="button" class="relative z-10 md:hidden p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors cursor-pointer" aria-label="Toggle Navigation Menu">
+                    <i id="menu-icon-open" class="ph ph-list text-2xl pointer-events-none"></i>
+                    <i id="menu-icon-close" class="ph ph-x text-2xl hidden pointer-events-none"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Panel Menu Mobile -->
+        <div id="mobile-menu" class="hidden md:hidden border-t border-slate-300 dark:border-slate-800 bg-slate-50/95 dark:bg-slate-950/95 backdrop-blur-xl px-4 pt-2 pb-4 space-y-1">
+            <a href="/al-quran/home-quran.html" class="mobile-nav-link block px-3 py-2 rounded-lg text-base font-medium hover:bg-slate-200/80 dark:hover:bg-slate-800/80 hover:text-brand-light dark:hover:text-brand-dark transition-colors">Al-Quran</a>
+            <a href="/doa/home-doa.html" class="mobile-nav-link block px-3 py-2 rounded-lg text-base font-medium hover:bg-slate-200/80 dark:hover:bg-slate-800/80 hover:text-brand-light dark:hover:text-brand-dark transition-colors">Doa Harian</a>
+            <a href="/jadwal-shalat/home-jadwal.html" class="mobile-nav-link block px-3 py-2 rounded-lg text-base font-bold text-brand-light dark:text-brand-dark bg-slate-200/60 dark:bg-slate-900 transition-colors">Jadwal Shalat</a>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <header class="max-w-4xl mx-auto px-4 pt-12 pb-8 text-center">
+        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight mb-3 text-slate-900 dark:text-slate-100">
+            Jadwal Shalat Hari Ini
+        </h1>
+        <p class="text-slate-700 dark:text-slate-300 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed font-medium">
+            Lihat jadwal shalat harian untuk wilayah Anda. Pilih provinsi, kabupaten/kota, dan bulan untuk melihat jadwal lengkap.
+        </p>
+    </header>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pb-24 space-y-8">
+
+        <!-- Filter Region (Provinsi, Kab/Kota, Bulan) -->
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-3xl p-6 shadow-sm">
+            <!-- Filter Provinsi -->
+            <div>
+                <label class="block text-md font-bold tracking-wider text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-1.5">
+                    <i class="ph ph-map-pin text-base text-slate-900 dark:text-slate-100"></i> Pilih Provinsi
+                </label>
+                <div class="relative">
+                    <select id="provinsi-select" class="w-full appearance-none bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-sm font-semibold rounded-xl px-4 py-3 pr-10 focus:outline-none focus:ring-2 focus:ring-slate-500 transition-all cursor-pointer">
+                        <option value="">Memuat Provinsi...</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-700 dark:text-slate-300">
+                        <i class="ph ph-caret-down text-lg"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter Kabupaten/Kota -->
+            <div>
+                <label class="block text-md font-bold tracking-wider text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-1.5">
+                    <i class="ph ph-buildings text-base text-slate-900 dark:text-slate-100"></i> Pilih Kabupaten/Kota
+                </label>
+                <div class="relative">
+                    <select id="kabkota-select" class="w-full appearance-none bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-sm font-semibold rounded-xl px-4 py-3 pr-10 focus:outline-none focus:ring-2 focus:ring-slate-500 transition-all cursor-pointer">
+                        <option value="">Pilih Provinsi Terlebih Dahulu</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-700 dark:text-slate-300">
+                        <i class="ph ph-caret-down text-lg"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter Bulan -->
+            <div>
+                <label class="block text-md font-bold tracking-wider text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-1.5">
+                    <i class="ph ph-calendar text-base text-slate-900 dark:text-slate-100"></i> Pilih Bulan
+                </label>
+                <div class="relative">
+                    <select id="bulan-select" class="w-full appearance-none bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-sm font-semibold rounded-xl px-4 py-3 pr-10 focus:outline-none focus:ring-2 focus:ring-slate-500 transition-all cursor-pointer">
+                        <option value="01">Januari</option>
+                        <option value="02">Februari</option>
+                        <option value="03">Maret</option>
+                        <option value="04">April</option>
+                        <option value="05">Mei</option>
+                        <option value="06">Juni</option>
+                        <option value="07">Juli</option>
+                        <option value="08">Agustus</option>
+                        <option value="09">September</option>
+                        <option value="10">Oktober</option>
+                        <option value="11">November</option>
+                        <option value="12">Desember</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-700 dark:text-slate-300">
+                        <i class="ph ph-caret-down text-lg"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Countdown Banner Shalat Berikutnya -->
+        <section id="countdown-banner" class="hidden bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
+            <div class="flex items-center gap-4 text-center sm:text-left">
+                <div class="w-14 h-14 rounded-2xl bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-2xl text-slate-900 dark:text-slate-100 shrink-0">
+                    <i class="ph-fill ph-bell-ringing"></i>
+                </div>
+                <div>
+                    <span class="text-xs font-bold tracking-widest text-slate-600 dark:text-slate-400">Shalat Berikutnya</span>
+                    <h2 id="next-prayer-name" class="text-2xl font-bold text-slate-900 dark:text-slate-100 mt-0.5">Memuat...</h2>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-8 text-center">
+                <div>
+                    <span class="text-xs font-bold tracking-wider text-slate-600 dark:text-slate-400">Hitung Mundur</span>
+                    <div id="countdown-timer" class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100 font-mono mt-1">
+                        00:00:00
+                    </div>
+                </div>
+                <div class="hidden sm:block border-l border-slate-300 dark:border-slate-800 h-10"></div>
+                <div class="hidden sm:block text-right">
+                    <span class="text-xs font-bold tracking-wider text-slate-600 dark:text-slate-400">Waktu Sekarang</span>
+                    <div id="current-clock" class="text-lg font-bold text-slate-900 dark:text-slate-100 font-mono mt-1">
+                        --:--:--
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Card Waktu Shalat Hari Ini -->
+        <section id="today-card" class="hidden space-y-4">
+            <div class="flex items-center justify-between px-1">
+                <h3 class="text-xl font-bold text-slate-900 dark:text-slate-100">Jadwal Hari Ini</h3>
+                <span id="today-date-formatted" class="text-xs font-bold px-3 py-1 bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-full">--</span>
+            </div>
+
+            <div id="today-prayer-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+                <!-- Dihasilkan oleh JavaScript -->
+                <div class="col-span-full text-center py-8 text-slate-700 dark:text-slate-300 font-medium">Memuat jadwal harian...</div>
+            </div>
+        </section>
+
+        <!-- Tabel Jadwal Shalat Sebulan -->
+        <section id="month-card" class="hidden bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-4">
+                <div>
+                    <h3 id="table-title" class="text-xl font-bold text-slate-900 dark:text-slate-100">Jadwal Shalat Bulanan</h3>
+                    <p id="table-subtitle" class="text-xs text-slate-600 dark:text-slate-400 font-semibold mt-1">Wilayah Salatiga & sekitarnya</p>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                    <thead>
+                        <tr class="border-b border-slate-200 dark:border-slate-800 text-xs font-bold text-slate-600 dark:text-slate-400 tracking-wider">
+                            <th class="py-3 px-3">Tgl</th>
+                            <th class="py-3 px-3">Hari</th>
+                            <th class="py-3 px-3">Imsak</th>
+                            <th class="py-3 px-3">Subuh</th>
+                            <th class="py-3 px-3">Terbit</th>
+                            <th class="py-3 px-3">Dhuha</th>
+                            <th class="py-3 px-3">Dzuhur</th>
+                            <th class="py-3 px-3">Ashar</th>
+                            <th class="py-3 px-3">Maghrib</th>
+                            <th class="py-3 px-3">Isya</th>
+                        </tr>
+                    </thead>
+                    <tbody id="monthly-table-body" class="divide-y divide-slate-100 dark:divide-slate-800/60 font-medium">
+                        <tr>
+                            <td colspan="10" class="text-center py-12 text-slate-700 dark:text-slate-300 font-medium">Memuat data tabel bulanan...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-300 dark:border-slate-800 mt-20 py-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <i class="ph-fill ph-book-open-text text-3xl text-slate-400 dark:text-slate-600 mb-4 inline-block"></i>
+            <p class="font-bold text-lg text-brand-light dark:text-brand-dark">Qalbu.</p>
+            <p class="text-slate-700 dark:text-slate-300 text-sm mt-2 font-medium">Sumber data jadwal dari API EQuran.id (Kemenag RI).</p>
+            <p class="text-slate-600 dark:text-slate-400 text-sm mt-8">&copy; 2026 Dibangun untuk kenyamanan ibadah.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Engine -->
+    <script>
+        let currentProvinsi = "";
+        let currentKabKota = "";
+        let currentBulan = String(new Date().getMonth() + 1).padStart(2, '0');
+        let currentTahun = new Date().getFullYear();
+        let todayJadwalList = [];
+        let timerInterval = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initThemeToggle();
+            initMobileMenu();
+            setCurrentMonthDefault();
+            startLiveClock();
+            fetchProvinsiList();
+            loadJadwalShalat();
+        });
+
+        function initThemeToggle() {
+            const toggleBtn = document.getElementById('theme-toggle');
+            const html = document.documentElement;
+
+            toggleBtn.addEventListener('click', () => {
+                html.classList.toggle('dark');
+                localStorage.theme = html.classList.contains('dark') ? 'dark' : 'light';
+            });
+        }
+
+        function initMobileMenu() {
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const iconOpen = document.getElementById('menu-icon-open');
+            const iconClose = document.getElementById('menu-icon-close');
+
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                    iconOpen.classList.toggle('hidden');
+                    iconClose.classList.toggle('hidden');
+                });
+            }
+        }
+
+        function setCurrentMonthDefault() {
+            const bulanSelect = document.getElementById('bulan-select');
+            bulanSelect.value = currentBulan;
+
+            bulanSelect.addEventListener('change', (e) => {
+                currentBulan = e.target.value;
+                loadJadwalShalat();
+            });
+        }
+
+        function startLiveClock() {
+            const clockEl = document.getElementById('current-clock');
+            setInterval(() => {
+                const now = new Date();
+                clockEl.innerText = now.toLocaleTimeString('id-ID', { hour12: false });
+            }, 1000);
+        }
+
+        // Fetch Daftar Provinsi dari API
+        async function fetchProvinsiList() {
+            const provSelect = document.getElementById('provinsi-select');
+            try {
+                const res = await fetch("https://equran.id/api/v2/shalat/provinsi");
+                const result = await res.json();
+
+                if (result.code === 200) {
+                    provSelect.innerHTML = `<option value="" selected hidden>Pilih Provinsi</option>`;
+                    result.data.forEach(prov => {
+                        provSelect.innerHTML += `<option value="${prov}">${prov}</option>`;
+                    });
+
+                    // Set awal Kabkota untuk Jawa Tengah
+                    fetchKabKotaList(currentProvinsi);
+                }
+            } catch (error) {
+                provSelect.innerHTML = `<option value="">Gagal memuat provinsi</option>`;
+            }
+
+            provSelect.addEventListener('change', (e) => {
+                currentProvinsi = e.target.value;
+                if (currentProvinsi) {
+                    fetchKabKotaList(currentProvinsi);
+                }
+            });
+        }
+
+        // Fetch Daftar Kab/Kota berdasarkan Provinsi
+        async function fetchKabKotaList(prov) {
+            
+            const kabSelect = document.getElementById('kabkota-select');
+
+            if (!prov) {
+                kabSelect.innerHTML = `<option value="">Pilih Provinsi Terlebih Dahulu</option>`;
+                kabSelect.disabled = true;
+                return;
+            }
+
+            kabSelect.disabled = false;
+
+            try {
+                const res = await fetch("https://equran.id/api/v2/shalat/kabkota", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ provinsi: prov })
+                });
+                const result = await res.json();
+
+                if (result.code === 200) {
+                    kabSelect.innerHTML = `<option value="" selected hidden>Pilih Kab/Kota</option>`;
+                    result.data.forEach(kab => {
+                        kabSelect.innerHTML += `<option value="${kab}">${kab}</option>`;
+                    });
+                }
+            } catch (error) {
+                kabSelect.innerHTML = `<option value="">Gagal memuat kab/kota</option>`;
+            }
+
+            kabSelect.addEventListener('change', (e) => {
+                currentKabKota = e.target.value;
+                loadJadwalShalat();
+            });
+        }
+
+        // Fetch Utama Jadwal Shalat Bulanan
+        async function loadJadwalShalat() {
+            const tableBody = document.getElementById('monthly-table-body');
+            const todayGrid = document.getElementById('today-prayer-grid');
+            const badgeInfo = document.getElementById('badge-info-kabkota');
+            const tableTitle = document.getElementById('table-title');
+            const tableSubtitle = document.getElementById('table-subtitle');        
+
+            const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+            const monthName = monthNames[parseInt(currentBulan) - 1];
+
+            tableTitle.innerText = `Jadwal Shalat ${monthName} ${currentTahun}`;
+            tableSubtitle.innerText = `${currentKabKota}, ${currentProvinsi}`;
+
+            tableBody.innerHTML = `<tr><td colspan="10" class="text-center py-12 text-slate-700 dark:text-slate-300 font-medium animate-pulse">Memuat jadwal bulanan...</td></tr>`;
+
+            try {
+                const res = await fetch("https://equran.id/api/v2/shalat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        provinsi: currentProvinsi,
+                        kabkota: currentKabKota,
+                        bulan: currentBulan,
+                        tahun: currentTahun
+                    })
+                });
+
+                const result = await res.json();
+
+                if (result.code === 200 && result.data.jadwal) {
+                    const jadwalList = result.data.jadwal;
+                    todayJadwalList = jadwalList;
+
+                    renderMonthlyTable(jadwalList);
+
+                    // Ambil hari ini
+                    const todayDateNum = new Date().getDate();
+                    const todayData = jadwalList.find(j => j.tanggal === todayDateNum) || jadwalList[0];
+
+                    renderTodayGrid(todayData);
+                    setupCountdown(todayData);
+                }
+            } catch (error) {
+                tableBody.innerHTML = `<tr><td colspan="10" class="text-center py-8 text-red-600 dark:text-red-400 font-semibold">Gagal memuat data jadwal shalat.</td></tr>`;
+            }
+        }
+
+        function renderTodayGrid(todayData) {
+            const todayGrid = document.getElementById('today-prayer-grid');
+            const dateBadge = document.getElementById('today-date-formatted');
+            const countdownBanner = document.getElementById('countdown-banner');
+            const todayCard = document.getElementById('today-card');
+            const monthCard = document.getElementById('month-card'); 
+
+            
+            countdownBanner.classList.remove('hidden');
+            todayCard.classList.remove('hidden');
+            monthCard.classList.remove('hidden');
+
+            dateBadge.innerText = `${todayData.hari}, ${todayData.tanggal} ${document.getElementById('bulan-select').options[document.getElementById('bulan-select').selectedIndex].text} ${currentTahun}`;
+
+            const waktu = [
+                { nama: 'Subuh', waktu: todayData.subuh, icon: 'ph-cloud-sun' },
+                { nama: 'Terbit', waktu: todayData.terbit, icon: 'ph-sun-dim' },
+                { nama: 'Dzuhur', waktu: todayData.dzuhur, icon: 'ph-sun' },
+                { nama: 'Ashar', waktu: todayData.ashar, icon: 'ph-cloud' },
+                { nama: 'Maghrib', waktu: todayData.maghrib, icon: 'ph-sun-horizon' },
+                { nama: 'Isya', waktu: todayData.isya, icon: 'ph-moon' }
+            ];
+
+            todayGrid.innerHTML = '';
+            waktu.forEach(w => {
+                todayGrid.innerHTML += `
+                    <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-2xl p-5 text-center card-hover-fx">
+                        <i class="ph ${w.icon} text-2xl text-slate-700 dark:text-slate-300 mb-2 inline-block"></i>
+                        <p class="text-xs font-bold tracking-wider text-slate-600 dark:text-slate-400 mb-1">${w.nama}</p>
+                        <p class="text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight font-mono">${w.waktu}</p>
+                    </div>
+                `;
+            });
+        }
+
+        function setupCountdown(todayData) {
+            if (timerInterval) clearInterval(timerInterval);
+
+            const prayerTimes = [
+                { name: 'Subuh', time: todayData.subuh },
+                { name: 'Dzuhur', time: todayData.dzuhur },
+                { name: 'Ashar', time: todayData.ashar },
+                { name: 'Maghrib', time: todayData.maghrib },
+                { name: 'Isya', time: todayData.isya }
+            ];
+
+            function updateTimer() {
+                const now = new Date();
+                let nextPrayer = null;
+                let nextPrayerTime = null;
+
+                for (let p of prayerTimes) {
+                    const [h, m] = p.time.split(':').map(Number);
+                    const pDate = new Date();
+                    pDate.setHours(h, m, 0, 0);
+
+                    if (pDate > now) {
+                        nextPrayer = p.name;
+                        nextPrayerTime = pDate;
+                        break;
+                    }
+                }
+
+                // Jika semua waktu shalat hari ini sudah lewat, target subuh besok
+                if (!nextPrayer) {
+                    nextPrayer = 'Subuh (Besok)';
+                    const [h, m] = prayerTimes[0].time.split(':').map(Number);
+                    nextPrayerTime = new Date();
+                    nextPrayerTime.setDate(now.getDate() + 1);
+                    nextPrayerTime.setHours(h, m, 0, 0);
+                }
+
+                document.getElementById('next-prayer-name').innerText = nextPrayer;
+
+                const diff = nextPrayerTime - now;
+                const hours = Math.floor(diff / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                const formatted = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                document.getElementById('countdown-timer').innerText = formatted;
+            }
+
+            updateTimer();
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function renderMonthlyTable(list) {
+            const tableBody = document.getElementById('monthly-table-body');
+            const todayDateNum = new Date().getDate();
+            const isCurrentMonth = (new Date().getMonth() + 1) === parseInt(currentBulan);
+
+            tableBody.innerHTML = '';
+            list.forEach(row => {
+                const isToday = isCurrentMonth && row.tanggal === todayDateNum;
+                const rowBg = isToday 
+                    ? 'bg-slate-200/80 dark:bg-slate-800/90 font-bold text-slate-900 dark:text-slate-100' 
+                    : 'hover:bg-slate-100 dark:hover:bg-slate-800/40 text-slate-800 dark:text-slate-200';
+
+                tableBody.innerHTML += `
+                    <tr class="${rowBg} transition-colors">
+                        <td class="py-3 px-3">${row.tanggal} ${isToday ? '<span class="ml-1 text-[11px] px-2 py-0.5 bg-slate-900 text-slate-100 dark:bg-slate-100 dark:text-slate-900 rounded-full">Hari Ini</span>' : ''}</td>
+                        <td class="py-3 px-3">${row.hari}</td>
+                        <td class="py-3 px-3 font-mono text-xs">${row.imsak}</td>
+                        <td class="py-3 px-3 font-mono text-xs">${row.subuh}</td>
+                        <td class="py-3 px-3 font-mono text-xs text-slate-500 dark:text-slate-400">${row.terbit}</td>
+                        <td class="py-3 px-3 font-mono text-xs text-slate-500 dark:text-slate-400">${row.dhuha}</td>
+                        <td class="py-3 px-3 font-mono text-xs">${row.dzuhur}</td>
+                        <td class="py-3 px-3 font-mono text-xs">${row.ashar}</td>
+                        <td class="py-3 px-3 font-mono text-xs">${row.maghrib}</td>
+                        <td class="py-3 px-3 font-mono text-xs">${row.isya}</td>
+                    </tr>
+                `;
+            });
+        }
+
+    </script>
+</body>
+</html>
