@@ -506,7 +506,7 @@
             filteredDoaList = doaList.filter(doa => {
                 const matchesQuery = (doa.nama && doa.nama.toLowerCase().includes(query)) || (doa.idn && doa.idn.toLowerCase().includes(query));
                 const matchesCategory = category === 'semua kategori' || (doa.grup && doa.grup.toLowerCase() === category);
-                const matchesTag = tag === 'semua tag' || (doa.tag && doa.tag.toLowerCase().includes(tag));
+                const matchesTag = tag === 'semua tag' || (doa.tag && doa.tag.includes(tag));
                 return matchesQuery && matchesCategory && matchesTag;
             });
 

@@ -91,19 +91,19 @@
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a href="#quran" class="w-full sm:w-auto px-8 py-3.5 bg-brand-light hover:bg-slate-800 text-slate-100 dark:bg-brand-dark dark:hover:bg-slate-200 dark:text-slate-950 font-semibold rounded-full transition-colors flex items-center justify-center gap-2">
                 <i class="ph-bold ph-book-open"></i>
-                Mulai Membaca
+                Baca Al-Quran
             </a>
-            <div class="relative w-full sm:w-auto">
-                <i class="ph ph-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 dark:text-slate-300"></i>
-                <input type="text" id="search-surah" placeholder="Cari surah (mis: Yasin)..." class="w-full sm:w-72 pl-12 pr-4 py-3.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-full text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-500 transition-all">
-            </div>
+            <a href="#doa" class="w-full sm:w-auto px-8 py-3.5 bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-900 dark:text-slate-100 font-semibold rounded-full transition-colors flex items-center justify-center gap-2">
+                <i class="ph-bold ph-praying-hands"></i>
+                Kumpulan Doa
+            </a>
         </div>
     </header>
 
     <main class="flex-grow p-4">
         <!-- Terakhir Dibaca -->
         <section id="terakhir-dibaca-container" class="max-w-7xl mx-auto px-4 mb-16 hidden">
-            <div class="bg-slate-200/70 dark:bg-slate-900 rounded-2xl p-6 border border-slate-300 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="bg-slate-200/70 dark:bg-slate-900 rounded-2xl p-2 sm:p-6 border border-slate-300 dark:border-slate-800 flex flex-row sm:flex-row items-center justify-between gap-2 sm:gap-4">
                 <div>
                     <span class="text-xs font-bold tracking-widest text-brand-light dark:text-brand-dark">Terakhir Dibaca</span>
                     <h3 id="last-read-title" class="text-xl font-bold mt-1">Surah Al-Baqarah</h3>
@@ -112,19 +112,6 @@
                 <a href="#lanjutkan" class="px-6 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 font-semibold rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
                     Lanjutkan
                 </a>
-            </div>
-        </section>
-
-        <!-- Jadwal Shalat Widget -->
-        <section id="jadwal" class="max-w-7xl mx-auto px-4 mb-24">
-            <div class="flex items-center justify-between mb-6">
-                <h2 class="text-2xl font-bold">Jadwal Shalat</h2>
-                <span id="lokasi-jadwal" class="text-sm font-semibold px-3 py-1 bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-full">Lokasi: Salatiga</span>
-            </div>
-            
-            <div class="grid grid-cols-2 md:grid-cols-6 gap-4" id="jadwal-grid">
-                <!-- Loading State yang sudah berkontras tinggi & ramah dark mode -->
-                <div class="col-span-2 md:col-span-6 text-center py-8 text-slate-700 dark:text-slate-300 font-medium animate-pulse">Memuat jadwal shalat...</div>
             </div>
         </section>
 
@@ -144,6 +131,38 @@
             
             <div class="mt-8 text-center sm:hidden">
                 <a href="/al-quran/home-quran.html" class="inline-block px-6 py-3 border border-slate-400 dark:border-slate-700 rounded-full font-semibold">Lihat Semua Surah</a>
+            </div>
+        </section>
+        
+        <!-- doa Populer Grid -->
+        <section id="doa" class="max-w-7xl mx-auto px-4 mb-24">
+            <div class="flex items-end justify-between mb-8">
+                <div>
+                    <h2 class="text-2xl font-bold">Doa Pilihan</h2>
+                    <p class="text-slate-700 dark:text-slate-300 mt-1 font-medium">Doa yang sering dibaca.</p>
+                </div>
+                <a href="/doa/home-doa.html" class="text-brand-light dark:text-brand-dark font-bold underline-offset-4 hover:underline hidden sm:block">Lihat Semua Doa</a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="doa-grid">
+                <!-- Dihasilkan oleh JavaScript -->
+            </div>
+            
+            <div class="mt-8 text-center sm:hidden">
+                <a href="/doa/home-doa.html" class="inline-block px-6 py-3 border border-slate-400 dark:border-slate-700 rounded-full font-semibold">Lihat Semua Doa</a>
+            </div>
+        </section>
+
+        <!-- Jadwal Shalat Widget -->
+        <section id="jadwal" class="max-w-7xl mx-auto px-4 mb-24">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold">Jadwal Shalat</h2>
+                <span id="lokasi-jadwal" class="text-sm font-semibold px-3 py-1 bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-full">Lokasi: Salatiga</span>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-6 gap-4" id="jadwal-grid">
+                <!-- Loading State yang sudah berkontras tinggi & ramah dark mode -->
+                <div class="col-span-2 md:col-span-6 text-center py-8 text-slate-700 dark:text-slate-300 font-medium animate-pulse">Memuat jadwal shalat...</div>
             </div>
         </section>
     </main>

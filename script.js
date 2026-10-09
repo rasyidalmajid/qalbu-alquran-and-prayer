@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initThemeToggle();
     fetchJadwalShalat();
     fetchSurahPopuler();
+    fetchDoaPopuler();
     checkTerakhirDibaca();
 });
 
@@ -118,6 +119,63 @@ async function fetchSurahPopuler() {
     } catch (error) {
         grid.innerHTML = `<div class="col-span-1 md:col-span-3 text-center py-4 text-red-600 dark:text-red-400 font-semibold">Gagal memuat data surah.</div>`;
         console.error('Error fetching surah:', error);
+    }
+}
+
+async function fetchDoaPopuler() {
+    const gridDoa = document.getElementById('doa-grid');
+    const targetDoa = [1, 2, 3, 4, 5, 6];
+
+    try {
+        const response = await fetch('https://equran.id/api/doa');
+        const data = await response.json();
+
+        if (data.status === "success") {
+            gridDoa.innerHTML = '';
+            
+            const filteredDoa = data.data.filter(doa => targetDoa.includes(doa.id));
+            console.log('Filtered Doa:', filteredDoa); // Debugging: Log the filtered doa data
+            filteredDoa.forEach(doa => {
+                gridDoa.innerHTML += `
+                    <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl p-6 flex flex-col justify-between card-hover-fx hover:border-slate-900 dark:hover:border-slate-100 transition-all">
+                        <div>
+                            <div class="mb-2 border-b-4 border-slate-200 dark:border-slate-800 pb-2">
+                                <h3 class="font-bold text-lg text-slate-900 dark:text-slate-100 line-clamp-2">
+                                    ${doa.nama}
+                                </h3>
+                                <span class="py-0.5 text-[12px] text-brand-light dark:text-brand-dark mb-4 block">
+                                    ${doa.grup}
+                                </span>
+                            </div>
+                        
+                            <div class="text-right my-4">
+                                <p class="font-arabic text-2xl text-slate-900 dark:text-slate-50 line-clamp-2">
+                                    ${doa.ar}
+                                </p>
+                            </div>
+
+                            <p class="text-xs text-slate-700 dark:text-slate-300 font-medium line-clamp-2 leading-relaxed mb-6">
+                                ${doa.idn}
+                            </p>
+
+                            <span class="text-[12px] font-bold text-slate-600 dark:text-slate-400 tracking-wider">
+                                Tag: ${doa.tag.join(', ')}
+                            </span>
+                        </div>
+
+                        <div class="pt-4 border-t border-slate-200 dark:border-slate-800 mt-4">
+                            <button onclick="window.location.href='/doa/home-doa.html'" class="w-full py-2.5 px-4 rounded-xl bg-slate-100 dark:bg-slate-800/80 hover:bg-slate-900 hover:text-slate-100 dark:hover:bg-slate-100 dark:hover:text-slate-900 text-slate-900 dark:text-slate-100 text-xs font-bold transition-all flex items-center justify-center gap-2 group">
+                                <span>Baca Selengkapnya</span>
+                                <i class="ph ph-arrow-right group-hover:translate-x-0.5 transition-transform"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+    } catch (error) {
+        grid.innerHTML = `<div class="col-span-1 md:col-span-3 text-center py-4 text-red-600 dark:text-red-400 font-semibold">Gagal memuat data doa.</div>`;
+        console.error('Error fetching doa:', error);
     }
 }
 

@@ -540,7 +540,7 @@
 
                 tableBody.innerHTML += `
                     <tr class="${rowBg} transition-colors">
-                        <td class="py-3 px-3">${row.tanggal} ${isToday ? '<span class="ml-1 text-[11px] px-2 py-0.5 bg-slate-900 text-slate-100 dark:bg-slate-100 dark:text-slate-900 rounded-full">Hari Ini</span>' : ''}</td>
+                        <td class="py-3 px-3">${row.tanggal} ${isToday ? '<span class="ml-1 text-[11px] px-2 py-0.5 bg-slate-900 text-slate-100 dark:bg-slate-100 dark:text-slate-900 rounded-full hidden sm:inline">Hari Ini</span>' : ''}</td>
                         <td class="py-3 px-3">${row.hari}</td>
                         <td class="py-3 px-3 font-mono text-xs">${row.imsak}</td>
                         <td class="py-3 px-3 font-mono text-xs">${row.subuh}</td>
