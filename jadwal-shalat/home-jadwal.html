@@ -30,7 +30,7 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Poppins', 'sans-serif'],
+                        sans: ['Poppins],
                         arabic: ['Noto Naskh Arabic', 'serif'],
                     },
                     colors: {
@@ -192,14 +192,14 @@
             <div class="flex items-center gap-8 text-center">
                 <div>
                     <span class="text-xs font-bold tracking-wider text-slate-600 dark:text-slate-400">Hitung Mundur</span>
-                    <div id="countdown-timer" class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100 font-mono mt-1">
+                    <div id="countdown-timer" class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100 font-sans mt-1">
                         00:00:00
                     </div>
                 </div>
                 <div class="hidden sm:block border-l border-slate-300 dark:border-slate-800 h-10"></div>
                 <div class="hidden sm:block text-right">
                     <span class="text-xs font-bold tracking-wider text-slate-600 dark:text-slate-400">Waktu Sekarang</span>
-                    <div id="current-clock" class="text-lg font-bold text-slate-900 dark:text-slate-100 font-mono mt-1">
+                    <div id="current-clock" class="text-lg font-bold text-slate-900 dark:text-slate-100 font-sans mt-1">
                         --:--:--
                     </div>
                 </div>
@@ -468,7 +468,7 @@
                     <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-2xl p-5 text-center card-hover-fx">
                         <i class="ph ${w.icon} text-2xl text-slate-700 dark:text-slate-300 mb-2 inline-block"></i>
                         <p class="text-xs font-bold tracking-wider text-slate-600 dark:text-slate-400 mb-1">${w.nama}</p>
-                        <p class="text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight font-mono">${w.waktu}</p>
+                        <p class="text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight font-sans">${w.waktu}</p>
                     </div>
                 `;
             });
@@ -542,14 +542,14 @@
                     <tr class="${rowBg} transition-colors">
                         <td class="py-3 px-3">${row.tanggal} ${isToday ? '<span class="ml-1 text-[11px] px-2 py-0.5 bg-slate-900 text-slate-100 dark:bg-slate-100 dark:text-slate-900 rounded-full hidden sm:inline">Hari Ini</span>' : ''}</td>
                         <td class="py-3 px-3">${row.hari}</td>
-                        <td class="py-3 px-3 font-mono text-xs">${row.imsak}</td>
-                        <td class="py-3 px-3 font-mono text-xs">${row.subuh}</td>
-                        <td class="py-3 px-3 font-mono text-xs text-slate-500 dark:text-slate-400">${row.terbit}</td>
-                        <td class="py-3 px-3 font-mono text-xs text-slate-500 dark:text-slate-400">${row.dhuha}</td>
-                        <td class="py-3 px-3 font-mono text-xs">${row.dzuhur}</td>
-                        <td class="py-3 px-3 font-mono text-xs">${row.ashar}</td>
-                        <td class="py-3 px-3 font-mono text-xs">${row.maghrib}</td>
-                        <td class="py-3 px-3 font-mono text-xs">${row.isya}</td>
+                        <td class="py-3 px-3 font-sans text-xs">${row.imsak}</td>
+                        <td class="py-3 px-3 font-sans text-xs">${row.subuh}</td>
+                        <td class="py-3 px-3 font-sans text-xs text-slate-500 dark:text-slate-400">${row.terbit}</td>
+                        <td class="py-3 px-3 font-sans text-xs text-slate-500 dark:text-slate-400">${row.dhuha}</td>
+                        <td class="py-3 px-3 font-sans text-xs">${row.dzuhur}</td>
+                        <td class="py-3 px-3 font-sans text-xs">${row.ashar}</td>
+                        <td class="py-3 px-3 font-sans text-xs">${row.maghrib}</td>
+                        <td class="py-3 px-3 font-sans text-xs">${row.isya}</td>
                     </tr>
                 `;
             });
