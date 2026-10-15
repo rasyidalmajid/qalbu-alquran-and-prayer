@@ -71,7 +71,7 @@ ATURAN KETAT:
                     agent_config: {
                         type: "antigravity",
                         model: "gemini-3.5-flash-lite",
-                        max_total_tokens: 10000,
+                        max_total_tokens: 20000,
                     },
                     system_instruction: systemInstruction,
                 }, { timeout: 25000 });

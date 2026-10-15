@@ -1,32 +1,3 @@
-document.addEventListener('DOMContentLoaded', () => {
-    initThemeToggle();
-    initMobileMenu();
-});
-
-function initThemeToggle() {
-    const toggleBtn = document.getElementById('theme-toggle');
-    const html = document.documentElement;
-
-    toggleBtn.addEventListener('click', () => {
-        html.classList.toggle('dark');
-        localStorage.theme = html.classList.contains('dark') ? 'dark' : 'light';
-    });
-}
-
-function initMobileMenu() {
-    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
-    const iconOpen = document.getElementById('menu-icon-open');
-    const iconClose = document.getElementById('menu-icon-close');
-
-    if (mobileMenuBtn && mobileMenu) {
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-            iconOpen.classList.toggle('hidden');
-            iconClose.classList.toggle('hidden');
-        });
-    }
-}
 // ==========================================
 // 1. LOGIKA UTAMA & INISIALISASI
 // ==========================================
@@ -72,25 +43,21 @@ function initMobileMenu() {
 // 2. LOGIKA LIMIT USER & CHAT HISTORY LOCALSTORAGE
 // ==========================================
 
-// Poin 2: Fungsi Pengecekan Limit 10x Request Per Hari & Reset Otomatis
 function checkAndManageUserLimit() {
     const MAX_DAILY_REQUESTS = 10;
-    const today = new Date().toISOString().split('T')[0]; // Format Tanggal: YYYY-MM-DD
+    const today = new Date().toISOString().split('T')[0];
 
     let usageData = JSON.parse(localStorage.getItem('qalbu_ai_usage'));
 
-    // Jika data penggunaan belum ada ATAU tanggal hari ini sudah berbeda dari simpanan
     if (!usageData || usageData.date !== today) {
         usageData = {
             date: today,
             count: 0
         };
-        // Reset riwayat percakapan secara otomatis saat pergantian hari
         localStorage.removeItem('qalbu_ai_chat_history');
         chatHistory = [];
     }
 
-    // Cek apakah penggunaan melebihi batas harian
     if (usageData.count >= MAX_DAILY_REQUESTS) {
         alert("Kamu telah mencapai batas 10 kali pertanyaan AI per hari. Kuota akan di-reset otomatis besok!");
         return false;
@@ -99,7 +66,6 @@ function checkAndManageUserLimit() {
     return true;
 }
 
-// Fungsi untuk Menambah Hitungan Penggunaan Setelah Request Berhasil
 function incrementUserUsage() {
     const today = new Date().toISOString().split('T')[0];
     let usageData = JSON.parse(localStorage.getItem('qalbu_ai_usage')) || { date: today, count: 0 };
@@ -107,7 +73,7 @@ function incrementUserUsage() {
     localStorage.setItem('qalbu_ai_usage', JSON.stringify(usageData));
 }
 
-// Fungsi merender percakapan lama jika halaman di-refresh
+// Fungsi merender percakapan lama jika halaman di-refresh (Menggunakan Format AI Rapi)
 function renderExistingHistoryUI() {
     if (chatHistory.length > 0) {
         chatInputFirstSection.classList.add('hidden');
@@ -118,15 +84,15 @@ function renderExistingHistoryUI() {
             if (item.role === 'user') {
                 chatOutputSection.innerHTML += `
                     <div class="flex items-end justify-end space-x-2 mb-4">
-                        <div class="p-3 rounded-xl rounded-br-none max-w-[75%] bg-blue-600 text-white">
-                            <p class="text-sm">${escapeHtml(item.parts[0].text)}</p>
+                        <div class="p-3 rounded-xl rounded-br-none max-w-[85%] sm:max-w-[75%] bg-blue-600 text-white">
+                            <p class="text-sm leading-relaxed">${escapeHtml(item.parts[0].text)}</p>
                         </div>
                     </div>`;
             } else if (item.role === 'model') {
                 chatOutputSection.innerHTML += `
                     <div class="flex items-start space-x-2 mb-4">
-                        <div class="p-3 rounded-xl rounded-bl-none max-w-[75%] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
-                            <p class="text-sm text-slate-900 dark:text-slate-100">${escapeHtml(item.parts[0].text)}</p>
+                        <div class="p-4 rounded-xl rounded-bl-none max-w-[85%] sm:max-w-[75%] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-sm text-slate-900 dark:text-slate-100 prose dark:prose-invert max-w-none">
+                            ${formatAiResponse(item.parts[0].text)}
                         </div>
                     </div>`;
             }
@@ -149,7 +115,6 @@ const heroSection = document.getElementById('hero');
 const chatInputSection = document.getElementById('chat-input');
 const chatInputFirstSection = document.getElementById('chat-input-first');
 
-// Auto-resize & button state listener untuk Landing Textarea
 if (textAreaFirst) {
     textAreaFirst.addEventListener('input', function () {
         this.style.height = 'auto';
@@ -180,7 +145,6 @@ if (textAreaFirst) {
     });
 }
 
-// Auto-resize & button state listener untuk Chat Output Textarea
 if (textAreaAi) {
     textAreaAi.addEventListener('input', function () {
         this.style.height = 'auto';
@@ -211,7 +175,6 @@ if (textAreaAi) {
     });
 }
 
-// Event handler klik tombol kirim
 if (searchBtnFirst) {
     searchBtnFirst.addEventListener('click', function () {
         const query = textAreaFirst.value.trim();
@@ -235,7 +198,6 @@ if (searchBtnAi) {
 // 4. LOGIKA HELPER TERHUBUNG API AI
 // ==========================================
 
-// Helper toggle loading pada button & textarea
 function toggleLoadingState(isLoading, textArea, searchBtn) {
     if (isLoading) {
         textArea.disabled = true;
@@ -259,28 +221,22 @@ function toggleLoadingState(isLoading, textArea, searchBtn) {
     }
 }
 
-// Fungsi Utama Penanganan Kirim Pesan & Integrasi API Vercel
 async function fetchAiResponse(chatInput, currentTextArea, currentSearchBtn, contextData = null) {
-    // 1. Cek Limit Harian Pengguna
     if (!checkAndManageUserLimit()) {
         return;
     }
 
-    // 2. Ubah Tampilan UI ke Mode Chat
     chatInputFirstSection.classList.add('hidden');
     chatInputSection.classList.remove('hidden');
     heroSection.classList.add('hidden');
 
-    // 3. Aktifkan Loading State pada tombol & input
     toggleLoadingState(true, currentTextArea, currentSearchBtn);
 
-    // 4. Render Pesan User & Skeleton Loading AI ke Layar
     const loadingId = 'ai-loading-' + Date.now();
     renderUserAndLoadingMessage(chatInput, loadingId);
     chatOutputSection.scrollTop = chatOutputSection.scrollHeight;
 
     try {
-        // 5. Panggil Serverless Function Vercel (/api/chat)
         const response = await fetch('https://qalbu-alquran-and-prayer.vercel.app/api/chat', {
             method: 'POST',
             headers: {
@@ -293,7 +249,6 @@ async function fetchAiResponse(chatInput, currentTextArea, currentSearchBtn, con
             })
         });
 
-        // Ambil respon sebagai teks terlebih dahulu untuk menghindari SyntaxError unexpected end of JSON
         const responseText = await response.text();
         let data;
 
@@ -305,18 +260,14 @@ async function fetchAiResponse(chatInput, currentTextArea, currentSearchBtn, con
         }
 
         if (response.ok && data.reply) {
-            // 6. Tambah hitungan limit harian user
             incrementUserUsage();
 
-            // 7. Simpan pesan baru ke riwayat percakapan
             chatHistory.push({ role: "user", parts: [{ text: chatInput }] });
             chatHistory.push({ role: "model", parts: [{ text: data.reply }] });
             localStorage.setItem('qalbu_ai_chat_history', JSON.stringify(chatHistory));
 
-            // 8. Ganti Skeleton Loading dengan Jawaban Asli AI
             replaceLoadingWithResponse(loadingId, data.reply);
         } else {
-            // Jika ada kesalahan respon/limit dari server
             removeLoadingMessage(loadingId);
             alert("Error: " + (data.error || "Gagal mendapatkan respon dari AI."));
         }
@@ -325,7 +276,6 @@ async function fetchAiResponse(chatInput, currentTextArea, currentSearchBtn, con
         removeLoadingMessage(loadingId);
         alert("Terjadi kesalahan jaringan atau server Vercel: " + error.message);
     } finally {
-        // 9. Matikan Loading State & Reset Input
         toggleLoadingState(false, currentTextArea, currentSearchBtn);
         chatOutputSection.scrollTop = chatOutputSection.scrollHeight;
     }
@@ -335,8 +285,8 @@ function renderUserAndLoadingMessage(chatInput, loadingId) {
     chatOutputSection.innerHTML += `
         <!-- Pesan User -->
         <div class="flex items-end justify-end space-x-2 mb-4">
-            <div class="p-3 rounded-xl rounded-br-none max-w-[75%] bg-blue-600 text-white">
-                <p class="text-sm">${escapeHtml(chatInput)}</p>
+            <div class="p-3 rounded-xl rounded-br-none max-w-[85%] sm:max-w-[75%] bg-blue-600 text-white">
+                <p class="text-sm leading-relaxed">${escapeHtml(chatInput)}</p>
             </div>
         </div>
         
@@ -350,13 +300,15 @@ function renderUserAndLoadingMessage(chatInput, loadingId) {
     `;
 }
 
+// FUNGSI UTAMA: Mengganti Loading dengan Respon AI yang Sudah Diformat Rapi
 function replaceLoadingWithResponse(loadingId, aiResponse) {
     const loadingEl = document.getElementById(loadingId);
     if (loadingEl) {
+        const formattedHTML = formatAiResponse(aiResponse);
         loadingEl.outerHTML = `
             <div class="flex items-start space-x-2 mb-4">
-                <div class="p-3 rounded-xl rounded-bl-none max-w-[75%] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
-                    <p class="text-sm text-slate-900 dark:text-slate-100">${escapeHtml(aiResponse)}</p>
+                <div class="p-4 rounded-xl rounded-bl-none max-w-[85%] sm:max-w-[75%] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-sm text-slate-900 dark:text-slate-100 leading-relaxed space-y-3">
+                    ${formattedHTML}
                 </div>
             </div>
         `;
@@ -370,7 +322,33 @@ function removeLoadingMessage(loadingId) {
     }
 }
 
-// Utility kecil untuk mencegah Cross-Site Scripting (XSS)
+// FUNGSI FORMATTER: Mengubah Markdown & Teks Arab Menjadi HTML Berstyle Rapi
+function formatAiResponse(rawText) {
+    if (!rawText) return '';
+
+    let parsedHtml = '';
+
+    // 1. Jika Marked.js tersedia, parse sintaks Markdown
+    if (typeof marked !== 'undefined') {
+        parsedHtml = marked.parse(rawText);
+    } else {
+        // Fallback jika Marked.js belum di-load
+        parsedHtml = rawText
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+            .replace(/\n/g, '<br>');
+    }
+
+    // 2. Deteksi Karakter Arab menggunakan Regex Unicode (0600-06FF) dan bungkus dengan class Font Arabic
+    const arabicRegex = /([\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]+([\s\n\r\t]+[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]+)*)/g;
+    
+    parsedHtml = parsedHtml.replace(arabicRegex, function(match) {
+        return `<span class="font-arabic text-xl sm:text-2xl leading-loose block text-right my-2 text-slate-900 dark:text-slate-50">${match}</span>`;
+    });
+
+    return parsedHtml;
+}
+
 function escapeHtml(str) {
     if (!str) return '';
     return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
