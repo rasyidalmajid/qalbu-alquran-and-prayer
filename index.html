@@ -166,6 +166,29 @@
             </div>
         </section>
     </main>
+    <!-- Floating Action Button (FAB) - Qalbu AI -->
+    <div class="fixed bottom-6 right-6 z-50 group">
+        <!-- Tooltip / Label Melayang (Muncul Saat Hover di Desktop) -->
+        <div class="absolute right-full mr-3 top-1/2 -translate-y-1/2 hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 text-slate-100 dark:bg-slate-100 dark:text-slate-900 text-xs font-bold shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+            <span>Tanya Qalbu AI</span>
+            <i class="ph-fill ph-sparkle text-amber-400 dark:text-amber-500 text-sm"></i>
+        </div>
+
+        <!-- Tombol Utama FAB -->
+        <a href="/ai-chat/ai-chat.html" 
+        aria-label="Tanya Qalbu AI"
+        class="relative flex items-center justify-center w-14 h-14 rounded-full bg-slate-900 text-slate-100 dark:bg-slate-100 dark:text-slate-900 shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95 border border-slate-700/50 dark:border-slate-300/50 transition-all duration-200 group">
+            
+            <!-- Ikon Utama -->
+            <i class="ph-fill ph-sparkle text-2xl group-hover:rotate-12 transition-transform text-amber-300 dark:text-amber-600"></i>
+
+            <!-- Ping Animation (Indikator AI Aktif) -->
+            <span class="absolute -top-1 -right-1 flex h-3.5 w-3.5">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-amber-500 border-2 border-slate-50 dark:border-slate-950"></span>
+            </span>
+        </a>
+    </div>
 
     <!-- Footer -->
     <footer class="border-t border-slate-300 dark:border-slate-800 mt-32 py-12">

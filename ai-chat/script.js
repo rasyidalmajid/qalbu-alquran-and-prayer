@@ -269,12 +269,12 @@ async function fetchAiResponse(chatInput, currentTextArea, currentSearchBtn, con
             replaceLoadingWithResponse(loadingId, data.reply);
         } else {
             removeLoadingMessage(loadingId);
-            alert("Error: " + (data.error || "Gagal mendapatkan respon dari AI."));
+            alert("Gagal mendapatkan respon dari AI.");
         }
     } catch (error) {
         console.error("Error Fetch AI:", error);
         removeLoadingMessage(loadingId);
-        alert("Terjadi kesalahan jaringan atau server Vercel: " + error.message);
+        alert("Terjadi kesalahan jaringan atau server");
     } finally {
         toggleLoadingState(false, currentTextArea, currentSearchBtn);
         chatOutputSection.scrollTop = chatOutputSection.scrollHeight;
