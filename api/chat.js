@@ -75,13 +75,10 @@ ATURAN KETAT:
                     environment: "remote",
                     agent_config: {
                         type: "antigravity",
-                        model: "gemini-3.8-flash",
+                        model: "gemini-3.5-flash-lite",
+                        max_total_tokens: 10000,
                     },
                     system_instruction: systemInstruction,
-                    generationConfig: {
-                        maxOutputTokens: 300,
-                        temperature: 0.3
-                    }
                 }, { timeout: 25000 });
 
                 // Pastikan ada output teks dari balasan AI
