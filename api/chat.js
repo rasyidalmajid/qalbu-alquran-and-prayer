@@ -42,7 +42,7 @@ export default async function handler(req, res) {
 ATURAN KETAT:
 1. Hanya jawab pertanyaan terkait Al-Quran, Doa Harian, Dzikir, dan Jadwal Shalat.
 2. Jika pengguna bertanya di luar topik agama Islam atau fitur Qalbu, TOLAK dengan sopan dalam 1 kalimat.
-3. Jawab secara ringkas, padat, langsung ke intinya, dan hemat kata.`;
+3. Jawab secara ringkas dan hemat kata namun tetap ramah dan berikan penjelasan ketika diminta.`;
 
         // 4. Susun Format Riwayat Percakapan (History)
         let combinedInputText = "";
