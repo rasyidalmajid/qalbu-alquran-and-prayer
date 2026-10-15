@@ -1,4 +1,7 @@
 {
+  "name": "qalbu-alquran-and-prayer",
+  "version": "1.0.0",
+  "type": "module",
   "dependencies": {
     "@google/genai": "^2.30.0"
   }
