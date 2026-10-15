@@ -281,7 +281,7 @@ async function fetchAiResponse(chatInput, currentTextArea, currentSearchBtn, con
 
     try {
         // 5. Panggil Serverless Function Vercel (/api/chat)
-        const response = await fetch('/api/chat', {
+        const response = await fetch('https://qalbu-alquran-and-prayer.vercel.app/api/chat', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

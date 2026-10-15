@@ -3,6 +3,10 @@ import { GoogleGenAI } from "@google/genai";
 export default async function handler(req, res) {
     // Pastikan header selalu mengembalikan JSON
     res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    res.setHeader('Access-Control-Allow-Origin', 'https://qalbu-alquran-and-prayer.vercel.app'); // Ganti '*' dengan domain tertentu jika ingin lebih aman
+    res.setHeader('Access-Control-Allow-Methods', 'POST');
+    res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
 
     // 1. Validasi HTTP Method
     if (req.method !== 'POST') {
