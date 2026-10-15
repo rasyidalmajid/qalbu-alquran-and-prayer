@@ -22,9 +22,9 @@ export default async function handler(req, res) {
 
         // 2. Ambil daftar API Key dari Vercel Environment Variables
         const apiKeys = [
-            process.env.GEMINI_API_SATU,
-            process.env.GEMINI_API_DUA,
-            process.env.GEMINI_API_TIGA
+            process.env.API_KEY_SATU,
+            process.env.API_KEY_DUA,
+            process.env.API_KEY_TIGA
         ].filter(Boolean);
 
         if (apiKeys.length === 0) {
