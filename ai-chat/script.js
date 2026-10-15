@@ -288,14 +288,23 @@ async function fetchAiResponse(chatInput, currentTextArea, currentSearchBtn, con
             },
             body: JSON.stringify({
                 message: chatInput,
-                history: chatHistory,       // Poin 1: Kirim riwayat percakapan
-                apiContextData: contextData // Poin 5: Kirim data JSON konteks resmi jika ada
+                history: chatHistory,
+                apiContextData: contextData
             })
         });
 
-        const data = await response.json();
+        // Ambil respon sebagai teks terlebih dahulu untuk menghindari SyntaxError unexpected end of JSON
+        const responseText = await response.text();
+        let data;
 
-        if (response.ok) {
+        try {
+            data = JSON.parse(responseText);
+        } catch (e) {
+            console.error("Respon Server Bukan Format JSON:", responseText);
+            throw new Error("Server mengembalikan balasan kosong atau tidak valid.");
+        }
+
+        if (response.ok && data.reply) {
             // 6. Tambah hitungan limit harian user
             incrementUserUsage();
 
@@ -309,12 +318,12 @@ async function fetchAiResponse(chatInput, currentTextArea, currentSearchBtn, con
         } else {
             // Jika ada kesalahan respon/limit dari server
             removeLoadingMessage(loadingId);
-            alert("Error: " + data.error);
+            alert("Error: " + (data.error || "Gagal mendapatkan respon dari AI."));
         }
     } catch (error) {
         console.error("Error Fetch AI:", error);
         removeLoadingMessage(loadingId);
-        alert("Terjadi kesalahan jaringan saat menghubungi AI.");
+        alert("Terjadi kesalahan jaringan atau server Vercel: " + error.message);
     } finally {
         // 9. Matikan Loading State & Reset Input
         toggleLoadingState(false, currentTextArea, currentSearchBtn);
