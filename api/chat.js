@@ -45,23 +45,18 @@ ATURAN KETAT:
 3. Jawab secara ringkas, padat, langsung ke intinya, dan hemat kata.`;
 
         // 4. Susun Format Riwayat Percakapan (History)
-        const formattedContents = [];
+        let combinedInputText = "";
+
         if (Array.isArray(history) && history.length > 0) {
             history.forEach(item => {
                 if (item.role && item.parts && item.parts[0]?.text) {
-                    formattedContents.push({
-                        role: item.role === 'model' ? 'model' : 'user',
-                        parts: [{ text: item.parts[0].text }]
-                    });
+                    const speaker = item.role === 'model' ? 'Qalbu AI' : 'User';
+                    combinedInputText += `${speaker}: ${item.parts[0].text}\n`;
                 }
             });
         }
 
-        // Tambahkan input terbaru
-        formattedContents.push({
-            role: "user",
-            parts: [{ text: formattedInput }]
-        });
+        combinedInputText += `User: ${formattedInput}`;
 
         // 5. Loop Rotasi API Key saat Rate Limit
         let lastErrorMsg = "";
