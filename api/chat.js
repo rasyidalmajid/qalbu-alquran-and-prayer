@@ -66,7 +66,7 @@ ATURAN KETAT:
 
                 const interaction = await client.interactions.create({
                     agent: "antigravity-preview-09-2026",
-                    input: formattedContents,
+                    input: combinedInputText,
                     environment: "remote",
                     agent_config: {
                         type: "antigravity",
