@@ -77,7 +77,7 @@ ATURAN KETAT:
                         type: "antigravity",
                         model: "gemini-3.8-flash",
                     },
-                    system_instruction: systemInstruction },
+                    system_instruction: systemInstruction,
                     generationConfig: {
                         maxOutputTokens: 300,
                         temperature: 0.3
