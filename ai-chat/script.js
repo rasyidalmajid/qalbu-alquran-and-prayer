@@ -68,7 +68,7 @@ function checkAndManageUserLimit() {
 
 function incrementUserUsage() {
     const today = new Date().toISOString().split('T')[0];
-    let usageData = JSON.parse(localStorage.getItem('qalbu_ai_usage')) || { date: today, count: 0 };
+    let usageData = { date: today, count: localStorage.getItem('qalbu_ai_usage') ? JSON.parse(localStorage.getItem('qalbu_ai_usage')).count : 0 };
     usageData.count += 1;
     localStorage.setItem('qalbu_ai_usage', JSON.stringify(usageData));
 }
