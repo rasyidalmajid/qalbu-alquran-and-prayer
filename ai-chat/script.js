@@ -54,6 +54,7 @@ function checkAndManageUserLimit() {
             date: today,
             count: 0
         };
+        localStorage.setItem('qalbu_ai_usage', JSON.stringify(usageData));
         localStorage.removeItem('qalbu_ai_chat_history');
         chatHistory = [];
     }
