@@ -302,7 +302,11 @@
                 <button id="modal-copy-btn" class="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-light hover:bg-slate-800 text-slate-100 dark:bg-brand-dark dark:hover:bg-slate-200 dark:text-slate-950 rounded-xl text-sm font-bold transition-colors">
                     <i class="ph ph-copy text-lg"></i> Salin Doa
                 </button>
+                <button id="modal-ai-btn" class="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-light hover:bg-slate-800 text-slate-100 dark:bg-brand-dark dark:hover:bg-slate-200 dark:text-slate-950 rounded-xl text-sm font-bold transition-colors">
+                    <i class="ph ph-lightbulb text-lg"></i> Tanya Qalbu AI
+                </button>
             </div>
+            
 
         </div>
     </div>
@@ -328,6 +332,11 @@
                 <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-amber-500 border-2 border-slate-50 dark:border-slate-950"></span>
             </span>
         </a>
+    </div>
+
+    <div id="alert-success" class="hidden fixed top-4 right-4 z-50 flex items-start sm:items-center p-4 mb-4 text-sm text-fg-success-strong rounded-xl bg-green-400" role="alert">
+        <svg class="w-4 h-4 me-2 shrink-0 mt-0.5 sm:mt-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+        <p id="alert-success-message"></p>
     </div>
 
     <!-- Footer -->
@@ -556,6 +565,9 @@
             document.getElementById('modal-copy-btn').onclick = () => {
                 handleCopyDoa(safeNama, item.ar, item.idn || item.terjemahan);
             };
+            document.getElementById('modal-ai-btn').onclick = () => {
+                askAI(safeNama, item.ar.replace(/'/g, "\\'"), item.idn.replace(/'/g, "\\'"));
+            };
 
             modal.classList.remove('hidden');
             setTimeout(() => {
@@ -563,6 +575,12 @@
                 modalBox.classList.remove('opacity-0', 'scale-95');
                 modalBox.classList.add('opacity-100', 'scale-100');
             }, 10);
+        }
+
+        function askAI(nama, arab, terjemahan) {
+            const prompt = `Tolong jelaskan makna dari ayat berikut:\n\nNama: ${nama}\nArab: ${arab}\nTerjemahan: ${terjemahan}`;
+            const encodedPrompt = encodeURIComponent(prompt);
+            window.open(`/ai-chat/ai-chat.html?prompt=${encodedPrompt}`);
         }
 
         function closeDoaModal() {
@@ -584,7 +602,19 @@
         function handleCopyDoa(nama, arab, terjemahan) {
             const textToCopy = `${nama}\n\n${arab}\n\nArtinya: "${terjemahan}"\n\n(Dikutip dari Aplikasi Qalbu)`;
             navigator.clipboard.writeText(textToCopy);
-            alert('Doa berhasil disalin!');
+            showAlert('Doa berhasil disalin ke clipboard!');
+        }
+
+        function showAlert(message) {
+            const alertBox = document.getElementById('alert-success');
+            const alertMessage = document.getElementById('alert-success-message');
+
+            alertMessage.innerText = message;
+            alertBox.classList.remove('hidden');
+
+            setTimeout(() => {
+                alertBox.classList.add('hidden');
+            }, 3000);
         }
 
         function getFallbackDoa() {

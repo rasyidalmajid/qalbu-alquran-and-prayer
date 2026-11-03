@@ -8,6 +8,7 @@ let chatHistory = JSON.parse(localStorage.getItem('qalbu_ai_chat_history')) || [
 document.addEventListener('DOMContentLoaded', () => {
     initThemeToggle();
     initMobileMenu();
+    checkPromptParameter(); // Mengecek apakah ada parameter prompt di URL
     renderExistingHistoryUI(); // Merender riwayat percakapan lama jika ada di localStorage
 });
 
@@ -60,7 +61,7 @@ function checkAndManageUserLimit() {
     }
 
     if (usageData.count >= MAX_DAILY_REQUESTS) {
-        alert("Kamu telah mencapai batas 10 kali pertanyaan AI per hari. Kuota akan di-reset otomatis besok!");
+        showAlert("Kamu telah mencapai batas 10 kali pertanyaan AI per hari. Kuota akan di-reset otomatis besok!", "warning");
         return false;
     }
 
@@ -72,6 +73,25 @@ function incrementUserUsage() {
     let usageData = { date: today, count: localStorage.getItem('qalbu_ai_usage') ? JSON.parse(localStorage.getItem('qalbu_ai_usage')).count : 0 };
     usageData.count += 1;
     localStorage.setItem('qalbu_ai_usage', JSON.stringify(usageData));
+}
+
+function checkPromptParameter() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const prompt = urlParams.get('prompt');
+
+    if (prompt) {
+        const targetTextArea = chatHistory.length > 0 ? textAreaAi : textAreaFirst;
+        targetTextArea.value = decodeURIComponent(prompt);
+        adjustTextAreaHeight(targetTextArea);
+    }
+}
+
+function adjustTextAreaHeight(element) {
+    if (!element) return;
+    element.style.height = 'auto';
+    element.style.height = element.scrollHeight + 'px';
+    element.classList.toggle('overflow-y-auto', element.scrollHeight >= 192);
+    element.dispatchEvent(new Event('input'));
 }
 
 // Fungsi merender percakapan lama jika halaman di-refresh (Menggunakan Format AI Rapi)
@@ -270,16 +290,38 @@ async function fetchAiResponse(chatInput, currentTextArea, currentSearchBtn, con
             replaceLoadingWithResponse(loadingId, data.reply);
         } else {
             removeLoadingMessage(loadingId);
-            alert("Gagal mendapatkan respon dari AI.");
+            showAlert("Gagal mendapatkan respon dari AI.", "error");
         }
     } catch (error) {
         console.error("Error Fetch AI:", error);
         removeLoadingMessage(loadingId);
-        alert("Terjadi kesalahan jaringan atau server");
+        showAlert("Terjadi kesalahan jaringan atau server", "error");
     } finally {
         toggleLoadingState(false, currentTextArea, currentSearchBtn);
         chatOutputSection.scrollTop = chatOutputSection.scrollHeight;
     }
+}
+
+function showAlert(message, type = "success") {
+    const alertBox = document.getElementById('alert-success');
+    const alertMessage = document.getElementById('alert-success-message');
+    alertMessage.innerText = message;
+    alertBox.classList.remove('hidden');
+
+    if (type === "success") {
+        alertBox.classList.remove('bg-red-400', 'text-red-700');
+        alertBox.classList.add('bg-green-400', 'text-green-700');
+    } else if (type === "error") {
+        alertBox.classList.remove('bg-green-400', 'text-green-700');
+        alertBox.classList.add('bg-red-400', 'text-red-700');
+    } else if (type === "warning") {
+        alertBox.classList.remove('bg-green-400', 'text-green-700');
+        alertBox.classList.add('bg-yellow-400', 'text-yellow-700');
+    }
+
+    setTimeout(() => {
+        alertBox.classList.add('hidden');
+    }, 3000);
 }
 
 function renderUserAndLoadingMessage(chatInput, loadingId) {

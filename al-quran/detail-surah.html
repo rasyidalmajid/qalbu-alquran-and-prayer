@@ -268,6 +268,10 @@
 
             </div>
         </div>
+        <div id="alert-success" class="hidden fixed top-4 right-4 z-50 flex items-start sm:items-center p-4 mb-4 text-sm text-fg-success-strong rounded-xl bg-green-400" role="alert">
+            <svg class="w-4 h-4 me-2 shrink-0 mt-0.5 sm:mt-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+            <p id="alert-success-message"></p>
+        </div>
 
     </main>
 
@@ -442,6 +446,9 @@
                                 <button onclick="openTafsirModal(${currentDetailSurah.nomor}, ${item.nomorAyat}, '${currentDetailSurah.namaLatin.replace(/'/g, "\\'")}')" class="hover:text-slate-900 dark:hover:text-slate-100 transition-colors p-1" title="Lihat Tafsir">
                                     <i class="ph ph-book-open-text text-xl"></i>
                                 </button>
+                                <button onclick="askAI('${item.teksArab.replace(/'/g, "\\'")}', '${item.teksLatin.replace(/'/g, "\\'")}', '${item.teksIndonesia.replace(/'/g, "\\'")}')" class="hover:text-slate-900 dark:hover:text-slate-100 transition-colors p-1" title="Tanya AI">
+                                    <i class="ph ph-lightbulb text-xl"></i>
+                                </button>
                             </div>
                             <div class="w-9 h-9 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-800 dark:text-slate-200">
                                 ${item.nomorAyat}
@@ -546,7 +553,7 @@
         });
 
         function addLastRead(ayat, number){
-            alert("Berhasil Menyimpan Terakhir Dibaca");
+            showAlert("Berhasil Menyimpan Terakhir Dibaca", "success");
             localStorage.setItem("qalbu_last_read", JSON.stringify({
                 ayatNumber: ayat,
                 surahName: currentDetailSurah.namaLatin,
@@ -605,7 +612,7 @@
                 const audioPlayer = document.getElementById('audio-player');
                 audioPlayer.src = fullAudioUrl;
                 audioPlayer.play();
-                alert(`Memutar audio penuh Surah ${currentDetailSurah.namaLatin}`);
+                showAlert(`Memutar audio penuh Surah ${currentDetailSurah.namaLatin}`, 'success');
             });
         }
 
@@ -618,7 +625,35 @@
         function copyAyat(arab, latin, terjemahan) {
             const textToCopy = `${arab}\n\n${latin}\n\nArtinya: "${terjemahan}"`;
             navigator.clipboard.writeText(textToCopy);
-            alert('Teks ayat berhasil disalin!');
+            showAlert('Teks ayat berhasil disalin!', 'success');
+        }
+
+        function askAI(arab, latin, terjemahan) {
+            const prompt = `Tolong jelaskan makna dan tafsir dari ayat berikut:\n\nArab: ${arab}\nLatin: ${latin}\nTerjemahan: ${terjemahan}`;
+            const encodedPrompt = encodeURIComponent(prompt);
+            window.open(`/ai-chat/ai-chat.html?prompt=${encodedPrompt}`);
+        }
+
+        function showAlert(message, type = "success") {
+            const alertBox = document.getElementById('alert-success');
+            const alertMessage = document.getElementById('alert-success-message');
+            alertMessage.innerText = message;
+            alertBox.classList.remove('hidden');
+
+            if (type === "success") {
+                alertBox.classList.remove('bg-red-400', 'text-red-700');
+                alertBox.classList.add('bg-green-400', 'text-green-700');
+            } else if (type === "error") {
+                alertBox.classList.remove('bg-green-400', 'text-green-700');
+                alertBox.classList.add('bg-red-400', 'text-red-700');
+            } else if (type === "warning") {
+                alertBox.classList.remove('bg-green-400', 'text-green-700');
+                alertBox.classList.add('bg-yellow-400', 'text-yellow-700');
+            }
+
+            setTimeout(() => {
+                alertBox.classList.add('hidden');
+            }, 3000);
         }
     </script>
 </body>
