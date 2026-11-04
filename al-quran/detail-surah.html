@@ -273,6 +273,29 @@
             <p id="alert-success-message"></p>
         </div>
 
+        <!-- Floating Audio Player Bar (FAB) -->
+        <div id="floating-audio-bar" class="fixed bottom-6 right-6 z-40 hidden flex-col sm:flex-row items-center gap-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-300 dark:border-slate-800 p-3 sm:px-4 sm:py-3 rounded-2xl shadow-2xl transition-all duration-300 transform translate-y-4 opacity-0 max-w-[50%] sm:max-w-md w-full sm:w-auto">
+            <div class="flex items-center gap-3 w-full sm:w-auto">
+                <button id="fab-play-pause-btn" class="w-10 h-10 rounded-full bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 flex items-center justify-center shrink-0 hover:scale-105 transition-transform" aria-label="Play/Pause">
+                    <i id="fab-play-icon" class="ph-fill ph-play text-lg"></i>
+                    <i id="fab-pause-icon" class="ph-fill ph-pause text-lg hidden"></i>
+                </button>
+                <div class="flex-grow min-w-0">
+                    <p id="fab-audio-title" class="text-xs font-bold text-slate-900 dark:text-slate-100 truncate">Memutar Audio...</p>
+                    <div class="flex items-center justify-between gap-2 text-[10px] text-slate-500 font-semibold mt-0.5">
+                        <span id="fab-current-time">00:00</span>
+                        <span id="fab-duration">00:00</span>
+                    </div>
+                </div>
+                <button id="fab-close-btn" class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 p-1 rounded-lg transition-colors shrink-0">
+                    <i class="ph ph-x text-lg"></i>
+                </button>
+            </div>
+            
+            <!-- Progress / Seek Bar -->
+            <input type="range" id="fab-progress" value="0" min="0" step="0.1" class="w-[100%] sm:w-32 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-slate-900 dark:accent-slate-100">
+        </div>
+
     </main>
 
     <!-- Footer -->
@@ -292,9 +315,11 @@
         let currentSurahNo = 1;
         let surahDataList = [];
         let currentDetailSurah = null;
+        let isAudioPlaying = false;
 
         document.addEventListener('DOMContentLoaded', () => {
             initThemeToggle();
+            initAudioPlayerFAB();
             initMobileMenu();
 
             const urlParams = new URLSearchParams(window.location.search);
@@ -609,6 +634,9 @@
                 const selectedQari = document.getElementById('qari-select').value;
                 const fullAudioUrl = currentDetailSurah.audioFull[selectedQari] || Object.values(currentDetailSurah.audioFull)[0];
                 
+                const fabTitle = document.getElementById('fab-audio-title');
+                fabTitle.innerText = `Surah ${currentDetailSurah.namaLatin} (Penuh)`;
+
                 const audioPlayer = document.getElementById('audio-player');
                 audioPlayer.src = fullAudioUrl;
                 audioPlayer.play();
@@ -618,6 +646,12 @@
 
         function playAyatAudio(url, nomorAyat) {
             const audioPlayer = document.getElementById('audio-player');
+            const fabTitle = document.getElementById('fab-audio-title');
+            
+            if (currentDetailSurah) {
+                fabTitle.innerText = `Surah ${currentDetailSurah.namaLatin} • Ayat ${nomorAyat}`;
+            }
+
             audioPlayer.src = url;
             audioPlayer.play();
         }
@@ -654,6 +688,101 @@
             setTimeout(() => {
                 alertBox.classList.add('hidden');
             }, 3000);
+        }
+
+        function initAudioPlayerFAB() {
+            const audioPlayer = document.getElementById('audio-player');
+            const fabBar = document.getElementById('floating-audio-bar');
+            const fabPlayPauseBtn = document.getElementById('fab-play-pause-btn');
+            const fabPlayIcon = document.getElementById('fab-play-icon');
+            const fabPauseIcon = document.getElementById('fab-pause-icon');
+            const fabProgress = document.getElementById('fab-progress');
+            const fabCurrentTime = document.getElementById('fab-current-time');
+            const fabDuration = document.getElementById('fab-duration');
+            const fabCloseBtn = document.getElementById('fab-close-btn');
+
+            // Toggle Play/Pause dari FAB
+            fabPlayPauseBtn.addEventListener('click', () => {
+                if (audioPlayer.paused) {
+                    audioPlayer.play();
+                } else {
+                    audioPlayer.pause();
+                }
+            });
+
+            // Event Audio Play
+            audioPlayer.addEventListener('play', () => {
+                isAudioPlaying = true;
+                fabPlayIcon.classList.add('hidden');
+                fabPauseIcon.classList.remove('hidden');
+                showFAB();
+            });
+
+            // Event Audio Pause
+            audioPlayer.addEventListener('pause', () => {
+                isAudioPlaying = false;
+                fabPlayIcon.classList.remove('hidden');
+                fabPauseIcon.classList.add('hidden');
+            });
+
+            // Event Update Waktu dan Progress Bar
+            audioPlayer.addEventListener('timeupdate', () => {
+                if (!isNaN(audioPlayer.duration)) {
+                    const progressPercent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+                    fabProgress.value = progressPercent;
+                    fabProgress.max = 100;
+
+                    fabCurrentTime.innerText = formatAudioTime(audioPlayer.currentTime);
+                    fabDuration.innerText = formatAudioTime(audioPlayer.duration);
+                }
+            });
+
+            // Seek / Lompat ke Durasi Tertentu
+            fabProgress.addEventListener('input', (e) => {
+                if (!isNaN(audioPlayer.duration)) {
+                    const seekTime = (e.target.value / 100) * audioPlayer.duration;
+                    audioPlayer.currentTime = seekTime;
+                }
+            });
+
+            // Saat Audio Selesai
+            audioPlayer.addEventListener('ended', () => {
+                isAudioPlaying = false;
+                fabPlayIcon.classList.remove('hidden');
+                fabPauseIcon.classList.add('hidden');
+                fabProgress.value = 0;
+                fabCurrentTime.innerText = '00:00';
+            });
+
+            // Tombol Close FAB
+            fabCloseBtn.addEventListener('click', () => {
+                audioPlayer.pause();
+                hideFAB();
+            });
+        }
+
+        function showFAB() {
+            const fabBar = document.getElementById('floating-audio-bar');
+            fabBar.classList.remove('hidden');
+            setTimeout(() => {
+                fabBar.classList.remove('translate-y-4', 'opacity-0');
+                fabBar.classList.add('translate-y-0', 'opacity-100');
+            }, 10);
+        }
+
+        function hideFAB() {
+            const fabBar = document.getElementById('floating-audio-bar');
+            fabBar.classList.remove('translate-y-0', 'opacity-100');
+            fabBar.classList.add('translate-y-4', 'opacity-0');
+            setTimeout(() => {
+                fabBar.classList.add('hidden');
+            }, 300);
+        }
+
+        function formatAudioTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
     </script>
 </body>
