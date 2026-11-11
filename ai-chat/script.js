@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initMobileMenu();
     checkPromptParameter(); // Mengecek apakah ada parameter prompt di URL
     renderExistingHistoryUI(); // Merender riwayat percakapan lama jika ada di localStorage
+    checkAndManageUserLimit();
 });
 
 function initThemeToggle() {
@@ -309,14 +310,14 @@ function showAlert(message, type = "success") {
     alertBox.classList.remove('hidden');
 
     if (type === "success") {
-        alertBox.classList.remove('bg-red-400', 'text-red-700');
-        alertBox.classList.add('bg-green-400', 'text-green-700');
+        alertBox.classList.remove('bg-red-400');
+        alertBox.classList.add('bg-green-400');
     } else if (type === "error") {
-        alertBox.classList.remove('bg-green-400', 'text-green-700');
-        alertBox.classList.add('bg-red-400', 'text-red-700');
+        alertBox.classList.remove('bg-green-400');
+        alertBox.classList.add('bg-red-400');
     } else if (type === "warning") {
-        alertBox.classList.remove('bg-green-400', 'text-green-700');
-        alertBox.classList.add('bg-yellow-400', 'text-yellow-700');
+        alertBox.classList.remove('bg-green-400');
+        alertBox.classList.add('bg-yellow-400');
     }
 
     setTimeout(() => {

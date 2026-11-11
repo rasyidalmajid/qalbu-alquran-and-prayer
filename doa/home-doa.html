@@ -605,12 +605,22 @@
             showAlert('Doa berhasil disalin ke clipboard!');
         }
 
-        function showAlert(message) {
+        function showAlert(message, type = "success") {
             const alertBox = document.getElementById('alert-success');
             const alertMessage = document.getElementById('alert-success-message');
-
             alertMessage.innerText = message;
             alertBox.classList.remove('hidden');
+
+            if (type === "success") {
+                alertBox.classList.remove('bg-red-400');
+                alertBox.classList.add('bg-green-400');
+            } else if (type === "error") {
+                alertBox.classList.remove('bg-green-400');
+                alertBox.classList.add('bg-red-400');
+            } else if (type === "warning") {
+                alertBox.classList.remove('bg-green-400');
+                alertBox.classList.add('bg-yellow-400');
+            }
 
             setTimeout(() => {
                 alertBox.classList.add('hidden');
