@@ -9,8 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initThemeToggle();
     initMobileMenu();
     checkPromptParameter(); // Mengecek apakah ada parameter prompt di URL
-    renderExistingHistoryUI(); // Merender riwayat percakapan lama jika ada di localStorage
     checkAndManageUserLimit();
+    renderExistingHistoryUI(); // Merender riwayat percakapan lama jika ada di localStorage
 });
 
 function initThemeToggle() {
