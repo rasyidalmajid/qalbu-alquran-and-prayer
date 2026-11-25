@@ -339,13 +339,74 @@
         <p id="alert-success-message"></p>
     </div>
 
-    <!-- Footer -->
-    <footer class="border-t border-slate-300 dark:border-slate-800 mt-20 py-12">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <i class="ph-fill ph-book-open-text text-3xl text-slate-400 dark:text-slate-600 mb-4 inline-block"></i>
-            <p class="font-bold text-lg text-brand-light dark:text-brand-dark">Qalbu.</p>
-            <p class="text-slate-700 dark:text-slate-300 text-sm mt-2 font-medium">Kumpulan Doa Harian & Dzikir Shahih.</p>
-            <p class="text-slate-600 dark:text-slate-400 text-sm mt-8">&copy; 2026 Dibangun untuk kenyamanan ibadah.</p>
+    <footer class="border-t border-slate-300 dark:border-slate-800 bg-slate-100/60 dark:bg-slate-900/40 mt-24 pt-14 pb-24 sm:pb-12 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-slate-300/80 dark:border-slate-800">
+                
+                <!-- Kolom 1: Brand & Deskripsi (Lebar 5 kolom di desktop) -->
+                <div class="lg:col-span-5 space-y-4">
+                    <a href="#" class="inline-flex items-center gap-2.5 group">
+                        <i class="ph-fill ph-book-open-text text-2xl text-brand-light dark:text-brand-dark group-hover:scale-110 transition-transform"></i>
+                        <span class="font-bold text-xl tracking-tight text-brand-light dark:text-brand-dark">Qalbu</span>
+                    </a>
+                    <p class="text-slate-700 dark:text-slate-300 text-sm leading-relaxed max-w-sm">
+                        Ruang digital yang tenang untuk membaca Al-Quran, meresapi doa harian, dan memantau waktu shalat. Dirancang bebas iklan, ringan, dan tanpa perlu login.
+                    </p>
+                </div>
+
+                <!-- Kolom 2: Navigasi Fitur (Lebar 2 kolom) -->
+                <div class="lg:col-span-2 space-y-3">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100">Fitur Utama</h3>
+                    <ul class="space-y-2.5 text-sm font-medium text-slate-600 dark:text-slate-400">
+                        <li>
+                            <a href="/al-quran/home-quran.html" class="hover:text-brand-light dark:hover:text-brand-dark transition-colors">Al-Quran 30 Juz</a>
+                        </li>
+                        <li>
+                            <a href="/doa/home-doa.html" class="hover:text-brand-light dark:hover:text-brand-dark transition-colors">Doa Harian</a>
+                        </li>
+                        <li>
+                            <a href="/jadwal-shalat/home-jadwal.html" class="hover:text-brand-light dark:hover:text-brand-dark transition-colors">Jadwal Shalat</a>
+                        </li>
+                        <li>
+                            <a href="/ai-chat/ai-chat.html" class="inline-flex items-center gap-1.5 hover:text-brand-light dark:hover:text-brand-dark transition-colors">
+                                <span>Tanya Qalbu AI</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Kolom 3: Pintasan Halaman (Lebar 2 kolom) -->
+                <div class="lg:col-span-2 space-y-3">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100">Pintasan</h3>
+                    <ul class="space-y-2.5 text-sm font-medium text-slate-600 dark:text-slate-400">
+                        <li>
+                            <a href="#" class="hover:text-brand-light dark:hover:text-brand-dark transition-colors">Kembali ke Atas &uarr;</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Kolom 4: Sumber Data & Kredit (Lebar 3 kolom) -->
+                <div class="lg:col-span-3 space-y-3">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100">Sumber Data</h3>
+                    <ul class="space-y-2.5 text-sm text-slate-600 dark:text-slate-400">
+                        <li class="flex items-start gap-2">
+                            <i class="ph ph-check-circle text-base text-slate-800 dark:text-slate-200 mt-0.5 shrink-0"></i>
+                            <span>Teks Al-Quran, Kumpulan Doa, dan Jadwal Shalat  dari <a href="https://equran.id" target="_blank" rel="noopener noreferrer" class="font-semibold underline underline-offset-4 hover:text-brand-light dark:hover:text-brand-dark">EQuran.id</a> (Kemenag RI).</span>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <!-- Baris Bawah: Copyright & Info -->
+            <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+                <p>&copy; 2026 <span class="font-semibold text-slate-800 dark:text-slate-200">Qalbu</span>. Dibangun untuk kenyamanan ibadah dan membaca.</p>
+                <div class="flex items-center gap-4">
+                    <span class="inline-flex items-center gap-1.5">
+                        <span>Semoga bermanfaat</span>
+                    </span>
+                </div>
+            </div>
         </div>
     </footer>
 

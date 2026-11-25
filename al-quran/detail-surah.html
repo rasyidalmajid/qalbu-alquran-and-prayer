@@ -248,7 +248,7 @@
                         </div>
                     </div>
                     
-                    <button onclick="closeTafsirModal()" class="p-2 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full transition-colors" aria-label="Tutup Modal">
+                    <button id="btn-close-modal" class="p-2 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full transition-colors" aria-label="Tutup Modal">
                         <i class="ph ph-x text-xl"></i>
                     </button>
                 </div>
@@ -268,6 +268,7 @@
 
             </div>
         </div>
+
         <div id="alert-success" class="hidden fixed top-4 right-4 z-50 flex items-start sm:items-center p-4 mb-4 text-sm text-fg-success-strong rounded-xl bg-green-400 text-white" role="alert">
             <svg class="w-4 h-4 me-2 shrink-0 mt-0.5 sm:mt-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
             <p id="alert-success-message"></p>
@@ -298,26 +299,87 @@
 
     </main>
 
-    <!-- Footer -->
-    <footer class="border-t border-slate-300 dark:border-slate-800 mt-20 py-12">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <i class="ph-fill ph-book-open-text text-3xl text-slate-400 dark:text-slate-600 mb-4 inline-block"></i>
-            <p class="font-bold text-lg text-brand-light dark:text-brand-dark">Qalbu.</p>
-            <p class="text-slate-700 dark:text-slate-300 text-sm mt-2 font-medium">Sumber teks Al-Quran dari API EQuran.id (Kemenag RI).</p>
-            <p class="text-slate-600 dark:text-slate-400 text-sm mt-8">&copy; 2026 Dibangun untuk kenyamanan membaca.</p>
+    <footer class="border-t border-slate-300 dark:border-slate-800 bg-slate-100/60 dark:bg-slate-900/40 mt-24 pt-14 pb-24 sm:pb-12 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-slate-300/80 dark:border-slate-800">
+                
+                <!-- Kolom 1: Brand & Deskripsi (Lebar 5 kolom di desktop) -->
+                <div class="lg:col-span-5 space-y-4">
+                    <a href="#" class="inline-flex items-center gap-2.5 group">
+                        <i class="ph-fill ph-book-open-text text-2xl text-brand-light dark:text-brand-dark group-hover:scale-110 transition-transform"></i>
+                        <span class="font-bold text-xl tracking-tight text-brand-light dark:text-brand-dark">Qalbu</span>
+                    </a>
+                    <p class="text-slate-700 dark:text-slate-300 text-sm leading-relaxed max-w-sm">
+                        Ruang digital yang tenang untuk membaca Al-Quran, meresapi doa harian, dan memantau waktu shalat. Dirancang bebas iklan, ringan, dan tanpa perlu login.
+                    </p>
+                </div>
+
+                <!-- Kolom 2: Navigasi Fitur (Lebar 2 kolom) -->
+                <div class="lg:col-span-2 space-y-3">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100">Fitur Utama</h3>
+                    <ul class="space-y-2.5 text-sm font-medium text-slate-600 dark:text-slate-400">
+                        <li>
+                            <a href="/al-quran/home-quran.html" class="hover:text-brand-light dark:hover:text-brand-dark transition-colors">Al-Quran 30 Juz</a>
+                        </li>
+                        <li>
+                            <a href="/doa/home-doa.html" class="hover:text-brand-light dark:hover:text-brand-dark transition-colors">Doa Harian</a>
+                        </li>
+                        <li>
+                            <a href="/jadwal-shalat/home-jadwal.html" class="hover:text-brand-light dark:hover:text-brand-dark transition-colors">Jadwal Shalat</a>
+                        </li>
+                        <li>
+                            <a href="/ai-chat/ai-chat.html" class="inline-flex items-center gap-1.5 hover:text-brand-light dark:hover:text-brand-dark transition-colors">
+                                <span>Tanya Qalbu AI</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Kolom 3: Pintasan Halaman (Lebar 2 kolom) -->
+                <div class="lg:col-span-2 space-y-3">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100">Pintasan</h3>
+                    <ul class="space-y-2.5 text-sm font-medium text-slate-600 dark:text-slate-400">
+                        <li>
+                            <a href="#" class="hover:text-brand-light dark:hover:text-brand-dark transition-colors">Kembali ke Atas &uarr;</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Kolom 4: Sumber Data & Kredit (Lebar 3 kolom) -->
+                <div class="lg:col-span-3 space-y-3">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100">Sumber Data</h3>
+                    <ul class="space-y-2.5 text-sm text-slate-600 dark:text-slate-400">
+                        <li class="flex items-start gap-2">
+                            <i class="ph ph-check-circle text-base text-slate-800 dark:text-slate-200 mt-0.5 shrink-0"></i>
+                            <span>Teks Al-Quran, Kumpulan Doa, dan Jadwal Shalat  dari <a href="https://equran.id" target="_blank" rel="noopener noreferrer" class="font-semibold underline underline-offset-4 hover:text-brand-light dark:hover:text-brand-dark">EQuran.id</a> (Kemenag RI).</span>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <!-- Baris Bawah: Copyright & Info -->
+            <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+                <p>&copy; 2026 <span class="font-semibold text-slate-800 dark:text-slate-200">Qalbu</span>. Dibangun untuk kenyamanan ibadah dan membaca.</p>
+                <div class="flex items-center gap-4">
+                    <span class="inline-flex items-center gap-1.5">
+                        <span>Semoga bermanfaat</span>
+                    </span>
+                </div>
+            </div>
         </div>
     </footer>
 
     <!-- Audio Player Hidden Element -->
     <audio id="audio-player" class="hidden"></audio>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
         let currentSurahNo = 1;
         let surahDataList = [];
         let currentDetailSurah = null;
         let isAudioPlaying = false;
 
-        document.addEventListener('DOMContentLoaded', () => {
+        $(document).ready(function () {
             initThemeToggle();
             initAudioPlayerFAB();
             initMobileMenu();
@@ -334,48 +396,42 @@
         });
 
         function initThemeToggle() {
-            const toggleBtn = document.getElementById('theme-toggle');
-            const html = document.documentElement;
-
-            toggleBtn.addEventListener('click', () => {
-                html.classList.toggle('dark');
-                localStorage.theme = html.classList.contains('dark') ? 'dark' : 'light';
+            $('#theme-toggle').on('click', function () {
+                $('html').toggleClass('dark');
+                localStorage.theme = $('html').hasClass('dark') ? 'dark' : 'light';
             });
         }
 
         function initMobileMenu() {
-            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-            const mobileMenu = document.getElementById('mobile-menu');
-            const iconOpen = document.getElementById('menu-icon-open');
-            const iconClose = document.getElementById('menu-icon-close');
-
-            if (mobileMenuBtn && mobileMenu) {
-                mobileMenuBtn.addEventListener('click', () => {
-                    mobileMenu.classList.toggle('hidden');
-                    iconOpen.classList.toggle('hidden');
-                    iconClose.classList.toggle('hidden');
-                });
-            }
+            $('#mobile-menu-btn').on('click', function () {
+                $('#mobile-menu').toggleClass('hidden');
+                $('#menu-icon-open').toggleClass('hidden');
+                $('#menu-icon-close').toggleClass('hidden');
+            });
         }
 
-        async function fetchSidebarSurah() {
-            const sidebarList = document.getElementById('sidebar-surah-list');
-            try {
-                const response = await fetch('https://equran.id/api/v2/surat');
-                const data = await response.json();
-
-                if (data.code === 200) {
-                    surahDataList = data.data;
-                    renderSidebarSurah(surahDataList);
+        function fetchSidebarSurah() {
+            $.ajax({
+                url: 'https://equran.id/api/v2/surat',
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    if (data.code === 200) {
+                        surahDataList = data.data;
+                        renderSidebarSurah(surahDataList);
+                    }
+                },
+                error: function () {
+                    $('#sidebar-surah-list').html(
+                        `<div class="text-red-600 dark:text-red-400 text-xs py-4 text-center font-semibold">Gagal memuat daftar surah.</div>`
+                    );
                 }
-            } catch (err) {
-                sidebarList.innerHTML = `<div class="text-red-600 dark:text-red-400 text-xs py-4 text-center font-semibold">Gagal memuat daftar surah.</div>`;
-            }
+            });
         }
 
         function renderSidebarSurah(list) {
-            const sidebarList = document.getElementById('sidebar-surah-list');
-            sidebarList.innerHTML = '';
+            const $sidebarList = $('#sidebar-surah-list');
+            $sidebarList.empty();
 
             list.forEach(surat => {
                 const isActive = surat.nomor === currentSurahNo;
@@ -383,7 +439,7 @@
                     ? 'bg-slate-200 dark:bg-slate-800 border-slate-900 dark:border-slate-100 text-slate-900 dark:text-slate-100 font-bold' 
                     : 'bg-transparent border-transparent text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 font-medium';
 
-                sidebarList.innerHTML += `
+                $sidebarList.append(`
                     <a href="?nomor=${surat.nomor}" class="flex items-center justify-between p-3 rounded-xl border ${activeClass} transition-colors group">
                         <div class="flex items-center gap-3 overflow-hidden">
                             <div class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-xs font-bold shrink-0 ${isActive ? 'text-slate-900 dark:text-slate-100' : 'text-slate-700 dark:text-slate-300'}">
@@ -396,65 +452,66 @@
                         </div>
                         <span class="font-arabic text-base text-slate-900 dark:text-slate-100 shrink-0 ml-2">${surat.nama}</span>
                     </a>
-                `;
+                `);
             });
         }
 
-        async function fetchSurahDetail(nomor) {
-            const headerContainer = document.getElementById('surah-header');
-            const ayatContainer = document.getElementById('ayat-container');
-            const bismillahContainer = document.getElementById('bismillah-container');
+        function fetchSurahDetail(nomor) {
+            $.ajax({
+                url: `https://equran.id/api/v2/surat/${nomor}`,
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    if (data.code === 200) {
+                        currentDetailSurah = data.data;
 
-            try {
-                const response = await fetch(`https://equran.id/api/v2/surat/${nomor}`);
-                const data = await response.json();
-
-                if (data.code === 200) {
-                    currentDetailSurah = data.data;
-
-                    headerContainer.innerHTML = `
-                        <div class="flex items-center justify-between relative z-10">
-                            <div>
-                                <h1 class="text-2xl sm:text-3xl font-bold flex items-center gap-3 text-slate-900 dark:text-slate-100">
-                                    <span>${currentDetailSurah.namaLatin}</span>
-                                    <span class="text-sm font-semibold text-slate-600 dark:text-slate-400">(${currentDetailSurah.arti})</span>
-                                </h1>
-                                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-2 tracking-wider font-semibold">
-                                    ${currentDetailSurah.tempatTurun} • ${currentDetailSurah.jumlahAyat} AYAT
-                                </p>
+                        $('#surah-header').html(`
+                            <div class="flex items-center justify-between relative z-10">
+                                <div>
+                                    <h1 class="text-2xl sm:text-3xl font-bold flex items-center gap-3 text-slate-900 dark:text-slate-100">
+                                        <span>${currentDetailSurah.namaLatin}</span>
+                                        <span class="text-sm font-semibold text-slate-600 dark:text-slate-400">(${currentDetailSurah.arti})</span>
+                                    </h1>
+                                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-2 tracking-wider font-semibold">
+                                        ${currentDetailSurah.tempatTurun} • ${currentDetailSurah.jumlahAyat} AYAT
+                                    </p>
+                                </div>
+                                <div class="font-arabic text-4xl sm:text-5xl text-slate-900 dark:text-slate-100">
+                                    ${currentDetailSurah.nama}
+                                </div>
                             </div>
-                            <div class="font-arabic text-4xl sm:text-5xl text-slate-900 dark:text-slate-100">
-                                ${currentDetailSurah.nama}
-                            </div>
-                        </div>
-                    `;
+                        `);
 
-                    if (currentDetailSurah.nomor !== 1 && currentDetailSurah.nomor !== 9) {
-                        bismillahContainer.classList.remove('hidden');
-                    } else {
-                        bismillahContainer.classList.add('hidden');
+                        if (currentDetailSurah.nomor !== 1 && currentDetailSurah.nomor !== 9) {
+                            $('#bismillah-container').removeClass('hidden');
+                        } else {
+                            $('#bismillah-container').addClass('hidden');
+                        }
+
+                        renderAyatList(currentDetailSurah.ayat);
+                        renderBottomNav();
                     }
-
-                    renderAyatList(currentDetailSurah.ayat);
-                    renderBottomNav();
+                },
+                error: function () {
+                    $('#ayat-container').html(
+                        `<div class="text-center py-8 text-red-600 dark:text-red-400 font-semibold">Gagal memuat detail surah. Silakan coba lagi.</div>`
+                    );
                 }
-            } catch (err) {
-                ayatContainer.innerHTML = `<div class="text-center py-8 text-red-600 dark:text-red-400 font-semibold">Gagal memuat detail surah. Silakan coba lagi.</div>`;
-            }
+            });
         }
 
         function renderAyatList(ayatList) {
-            const ayatContainer = document.getElementById('ayat-container');
-            const showTransliterasi = document.getElementById('toggle-transliterasi').checked;
-            const showTerjemahan = document.getElementById('toggle-terjemahan').checked;
-            const selectedQari = document.getElementById('qari-select').value;
+            const $ayatContainer = $('#ayat-container');
+            const showTransliterasi = $('#toggle-transliterasi').prop('checked');
+            const showTerjemahan = $('#toggle-terjemahan').prop('checked');
+            const selectedQari = $('#qari-select').val();
 
-            ayatContainer.innerHTML = '';
+            $ayatContainer.empty();
 
             ayatList.forEach(item => {
                 const audioUrl = item.audio[selectedQari] || Object.values(item.audio)[0];
 
-                ayatContainer.innerHTML += `
+                $ayatContainer.append(`
                     <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-2xl p-6 transition-all" id="ayat-${item.nomorAyat}">
                         <!-- Top Bar Ayat -->
                         <div class="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800 mb-6">
@@ -501,81 +558,77 @@
                             </p>
                         ` : ''}
                     </div>
-                `;
+                `);
             });
         }
 
-        async function openTafsirModal(nomorSurah, nomorAyat, namaSurah) {
-            const modal = document.getElementById('tafsir-modal');
-            const backdrop = document.getElementById('modal-backdrop');
-            const modalBox = document.getElementById('modal-box');
+        function openTafsirModal(nomorSurah, nomorAyat, namaSurah) {
+            const $modal = $('#tafsir-modal');
+            const $backdrop = $('#modal-backdrop');
+            const $modalBox = $('#modal-box');
             
-            document.getElementById('modal-title').innerText = `Tafsir ${namaSurah} Ayat ${nomorAyat}`;
-            document.getElementById('modal-badge-surah').innerText = namaSurah;
-            document.getElementById('modal-badge-ayat').innerText = `Ayat ${nomorAyat}`;
+            $('#modal-title').text(`Tafsir ${namaSurah} Ayat ${nomorAyat}`);
+            $('#modal-badge-surah').text(namaSurah);
+            $('#modal-badge-ayat').text(`Ayat ${nomorAyat}`);
             
-            document.getElementById('modal-arab-text').innerText = '...';
-            document.getElementById('modal-tafsir-content').innerHTML = `
+            $('#modal-arab-text').text('...');
+            $('#modal-tafsir-content').html(`
                 <div class="animate-pulse space-y-3 py-4">
                     <div class="h-4 bg-slate-300 dark:bg-slate-800 rounded w-full"></div>
                     <div class="h-4 bg-slate-300 dark:bg-slate-800 rounded w-5/6"></div>
                     <div class="h-4 bg-slate-300 dark:bg-slate-800 rounded w-4/6"></div>
                 </div>
-            `;
+            `);
 
-            modal.classList.remove('hidden');
+            $modal.removeClass('hidden');
             setTimeout(() => {
-                backdrop.classList.remove('opacity-0');
-                modalBox.classList.remove('opacity-0', 'scale-95');
-                modalBox.classList.add('opacity-100', 'scale-100');
+                $backdrop.removeClass('opacity-0');
+                $modalBox.removeClass('opacity-0 scale-95').addClass('opacity-100 scale-100');
             }, 10);
 
-            try {
-                const res = await fetch(`https://equran.id/api/v2/tafsir/${nomorSurah}`);
-                const result = await res.json();
+            $.ajax({
+                url: `https://equran.id/api/v2/tafsir/${nomorSurah}`,
+                method: 'GET',
+                dataType: 'json',
+                success: function (result) {
+                    if (result.code === 200) {
+                        const tafsirAyat = result.data.tafsir.find(t => t.ayat === nomorAyat);
+                        
+                        if (currentDetailSurah) {
+                            const ayatObj = currentDetailSurah.ayat.find(a => a.nomorAyat === nomorAyat);
+                            if (ayatObj) {
+                                $('#modal-arab-text').text(ayatObj.teksArab);
+                            }
+                        }
 
-                if (result.code === 200) {
-                    const tafsirAyat = result.data.tafsir.find(t => t.ayat === nomorAyat);
-                    
-                    if (currentDetailSurah) {
-                        const ayatObj = currentDetailSurah.ayat.find(a => a.nomorAyat === nomorAyat);
-                        if (ayatObj) {
-                            document.getElementById('modal-arab-text').innerText = ayatObj.teksArab;
+                        if (tafsirAyat) {
+                            const paragraphs = tafsirAyat.teks.split('\n').filter(p => p.trim() !== '');
+                            $('#modal-tafsir-content').html(
+                                paragraphs.map(p => `<p class="leading-relaxed text-slate-800 dark:text-slate-200 font-medium">${p}</p>`).join('')
+                            );
+                        } else {
+                            $('#modal-tafsir-content').text('Tafsir untuk ayat ini tidak ditemukan.');
                         }
                     }
-
-                    if (tafsirAyat) {
-                        const paragraphs = tafsirAyat.teks.split('\n').filter(p => p.trim() !== '');
-                        document.getElementById('modal-tafsir-content').innerHTML = paragraphs
-                            .map(p => `<p class="leading-relaxed text-slate-800 dark:text-slate-200 font-medium">${p}</p>`)
-                            .join('');
-                    } else {
-                        document.getElementById('modal-tafsir-content').innerText = 'Tafsir untuk ayat ini tidak ditemukan.';
-                    }
+                },
+                error: function () {
+                    $('#modal-tafsir-content').html('<p class="text-red-600 dark:text-red-400 font-semibold">Gagal memuat teks tafsir.</p>');
                 }
-            } catch (error) {
-                document.getElementById('modal-tafsir-content').innerHTML = '<p class="text-red-600 dark:text-red-400 font-semibold">Gagal memuat teks tafsir.</p>';
-            }
+            });
         }
 
         function closeTafsirModal() {
-            const backdrop = document.getElementById('modal-backdrop');
-            const modalBox = document.getElementById('modal-box');
-            const modal = document.getElementById('tafsir-modal');
+            const $backdrop = $('#modal-backdrop');
+            const $modalBox = $('#modal-box');
+            const $modal = $('#tafsir-modal');
 
-            backdrop.classList.add('opacity-0');
-            modalBox.classList.remove('opacity-100', 'scale-100');
-            modalBox.classList.add('opacity-0', 'scale-95');
+            $backdrop.addClass('opacity-0');
+            $modalBox.removeClass('opacity-100 scale-100').addClass('opacity-0 scale-95');
 
             setTimeout(() => {
-                modal.classList.add('hidden');
+                $modal.addClass('hidden');
             }, 300);
         }
-
-        document.getElementById('modal-backdrop').addEventListener('click', closeTafsirModal);
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeTafsirModal();
-        });
 
         function addLastRead(ayat, number){
             showAlert("Berhasil Menyimpan Terakhir Dibaca", "success");
@@ -587,69 +640,73 @@
         }
 
         function renderBottomNav() {
-            const prevBtn = document.getElementById('prev-surah-btn');
-            const nextBtn = document.getElementById('next-surah-btn');
+            const $prevBtn = $('#prev-surah-btn');
+            const $nextBtn = $('#next-surah-btn');
 
-            prevBtn.innerHTML = '';
-            nextBtn.innerHTML = '';
+            $prevBtn.empty();
+            $nextBtn.empty();
 
             if (currentDetailSurah.suratSebelumnya) {
-                prevBtn.innerHTML = `
+                $prevBtn.html(`
                     <a href="?nomor=${currentDetailSurah.suratSebelumnya.nomor}" class="inline-flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 px-4 py-2.5 rounded-xl font-bold text-sm text-slate-900 dark:text-slate-100 hover:border-slate-900 dark:hover:border-slate-100 transition-colors">
                         <i class="ph ph-arrow-left"></i> ${currentDetailSurah.suratSebelumnya.namaLatin}
                     </a>
-                `;
+                `);
             }
 
             if (currentDetailSurah.suratSelanjutnya) {
-                nextBtn.innerHTML = `
+                $nextBtn.html(`
                     <a href="?nomor=${currentDetailSurah.suratSelanjutnya.nomor}" class="inline-flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 px-4 py-2.5 rounded-xl font-bold text-sm text-slate-900 dark:text-slate-100 hover:border-slate-900 dark:hover:border-slate-100 transition-colors">
                         ${currentDetailSurah.suratSelanjutnya.namaLatin} <i class="ph ph-arrow-right"></i>
                     </a>
-                `;
+                `);
             }
         }
 
         function initEventListeners() {
-            document.getElementById('search-sidebar').addEventListener('input', (e) => {
-                const q = e.target.value.toLowerCase();
+            $('#search-sidebar').on('input', function (e) {
+                const q = $(this).val().toLowerCase();
                 const filtered = surahDataList.filter(s => s.namaLatin.toLowerCase().includes(q));
                 renderSidebarSurah(filtered);
             });
 
-            document.getElementById('toggle-transliterasi').addEventListener('change', () => {
+            $('#toggle-transliterasi').on('change', function () {
                 if (currentDetailSurah) renderAyatList(currentDetailSurah.ayat);
             });
 
-            document.getElementById('toggle-terjemahan').addEventListener('change', () => {
+            $('#toggle-terjemahan').on('change', function () {
                 if (currentDetailSurah) renderAyatList(currentDetailSurah.ayat);
             });
 
-            document.getElementById('qari-select').addEventListener('change', () => {
+            $('#qari-select').on('change', function () {
                 if (currentDetailSurah) renderAyatList(currentDetailSurah.ayat);
             });
 
-            document.getElementById('btn-play-full').addEventListener('click', () => {
+            $('#btn-play-full').on('click', function () {
                 if (!currentDetailSurah) return;
-                const selectedQari = document.getElementById('qari-select').value;
+                const selectedQari = $('#qari-select').val();
                 const fullAudioUrl = currentDetailSurah.audioFull[selectedQari] || Object.values(currentDetailSurah.audioFull)[0];
                 
-                const fabTitle = document.getElementById('fab-audio-title');
-                fabTitle.innerText = `Surah ${currentDetailSurah.namaLatin} (Penuh)`;
+                $('#fab-audio-title').text(`Surah ${currentDetailSurah.namaLatin} (Penuh)`);
 
-                const audioPlayer = document.getElementById('audio-player');
+                const audioPlayer = $('#audio-player')[0];
                 audioPlayer.src = fullAudioUrl;
                 audioPlayer.play();
                 showAlert(`Memutar audio penuh Surah ${currentDetailSurah.namaLatin}`, 'success');
             });
+
+            // Event handler penutupan modal via jQuery
+            $('#modal-backdrop, #btn-close-modal').on('click', closeTafsirModal);
+            $(document).on('keydown', function (e) {
+                if (e.key === 'Escape') closeTafsirModal();
+            });
         }
 
         function playAyatAudio(url, nomorAyat) {
-            const audioPlayer = document.getElementById('audio-player');
-            const fabTitle = document.getElementById('fab-audio-title');
+            const audioPlayer = $('#audio-player')[0];
             
             if (currentDetailSurah) {
-                fabTitle.innerText = `Surah ${currentDetailSurah.namaLatin} • Ayat ${nomorAyat}`;
+                $('#fab-audio-title').text(`Surah ${currentDetailSurah.namaLatin} • Ayat ${nomorAyat}`);
             }
 
             audioPlayer.src = url;
@@ -669,40 +726,29 @@
         }
 
         function showAlert(message, type = "success") {
-            const alertBox = document.getElementById('alert-success');
-            const alertMessage = document.getElementById('alert-success-message');
-            alertMessage.innerText = message;
-            alertBox.classList.remove('hidden');
+            const $alertBox = $('#alert-success');
+            $('#alert-success-message').text(message);
+            $alertBox.removeClass('hidden');
 
             if (type === "success") {
-                alertBox.classList.remove('bg-red-400');
-                alertBox.classList.add('bg-green-400');
+                $alertBox.removeClass('bg-red-400 bg-yellow-400').addClass('bg-green-400');
             } else if (type === "error") {
-                alertBox.classList.remove('bg-green-400');
-                alertBox.classList.add('bg-red-400');
+                $alertBox.removeClass('bg-green-400 bg-yellow-400').addClass('bg-red-400');
             } else if (type === "warning") {
-                alertBox.classList.remove('bg-green-400');
-                alertBox.classList.add('bg-yellow-400');
+                $alertBox.removeClass('bg-green-400 bg-red-400').addClass('bg-yellow-400');
             }
 
             setTimeout(() => {
-                alertBox.classList.add('hidden');
+                $alertBox.addClass('hidden');
             }, 3000);
         }
 
         function initAudioPlayerFAB() {
-            const audioPlayer = document.getElementById('audio-player');
-            const fabBar = document.getElementById('floating-audio-bar');
-            const fabPlayPauseBtn = document.getElementById('fab-play-pause-btn');
-            const fabPlayIcon = document.getElementById('fab-play-icon');
-            const fabPauseIcon = document.getElementById('fab-pause-icon');
-            const fabProgress = document.getElementById('fab-progress');
-            const fabCurrentTime = document.getElementById('fab-current-time');
-            const fabDuration = document.getElementById('fab-duration');
-            const fabCloseBtn = document.getElementById('fab-close-btn');
+            const $audioPlayer = $('#audio-player');
+            const audioPlayer = $audioPlayer[0];
 
             // Toggle Play/Pause dari FAB
-            fabPlayPauseBtn.addEventListener('click', () => {
+            $('#fab-play-pause-btn').on('click', function () {
                 if (audioPlayer.paused) {
                     audioPlayer.play();
                 } else {
@@ -711,71 +757,68 @@
             });
 
             // Event Audio Play
-            audioPlayer.addEventListener('play', () => {
+            $audioPlayer.on('play', function () {
                 isAudioPlaying = true;
-                fabPlayIcon.classList.add('hidden');
-                fabPauseIcon.classList.remove('hidden');
+                $('#fab-play-icon').addClass('hidden');
+                $('#fab-pause-icon').removeClass('hidden');
                 showFAB();
             });
 
             // Event Audio Pause
-            audioPlayer.addEventListener('pause', () => {
+            $audioPlayer.on('pause', function () {
                 isAudioPlaying = false;
-                fabPlayIcon.classList.remove('hidden');
-                fabPauseIcon.classList.add('hidden');
+                $('#fab-play-icon').removeClass('hidden');
+                $('#fab-pause-icon').addClass('hidden');
             });
 
             // Event Update Waktu dan Progress Bar
-            audioPlayer.addEventListener('timeupdate', () => {
+            $audioPlayer.on('timeupdate', function () {
                 if (!isNaN(audioPlayer.duration)) {
                     const progressPercent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
-                    fabProgress.value = progressPercent;
-                    fabProgress.max = 100;
+                    $('#fab-progress').val(progressPercent).attr('max', 100);
 
-                    fabCurrentTime.innerText = formatAudioTime(audioPlayer.currentTime);
-                    fabDuration.innerText = formatAudioTime(audioPlayer.duration);
+                    $('#fab-current-time').text(formatAudioTime(audioPlayer.currentTime));
+                    $('#fab-duration').text(formatAudioTime(audioPlayer.duration));
                 }
             });
 
             // Seek / Lompat ke Durasi Tertentu
-            fabProgress.addEventListener('input', (e) => {
+            $('#fab-progress').on('input', function (e) {
                 if (!isNaN(audioPlayer.duration)) {
-                    const seekTime = (e.target.value / 100) * audioPlayer.duration;
+                    const seekTime = ($(this).val() / 100) * audioPlayer.duration;
                     audioPlayer.currentTime = seekTime;
                 }
             });
 
             // Saat Audio Selesai
-            audioPlayer.addEventListener('ended', () => {
+            $audioPlayer.on('ended', function () {
                 isAudioPlaying = false;
-                fabPlayIcon.classList.remove('hidden');
-                fabPauseIcon.classList.add('hidden');
-                fabProgress.value = 0;
-                fabCurrentTime.innerText = '00:00';
+                $('#fab-play-icon').removeClass('hidden');
+                $('#fab-pause-icon').addClass('hidden');
+                $('#fab-progress').val(0);
+                $('#fab-current-time').text('00:00');
             });
 
             // Tombol Close FAB
-            fabCloseBtn.addEventListener('click', () => {
+            $('#fab-close-btn').on('click', function () {
                 audioPlayer.pause();
                 hideFAB();
             });
         }
 
         function showFAB() {
-            const fabBar = document.getElementById('floating-audio-bar');
-            fabBar.classList.remove('hidden');
+            const $fabBar = $('#floating-audio-bar');
+            $fabBar.removeClass('hidden');
             setTimeout(() => {
-                fabBar.classList.remove('translate-y-4', 'opacity-0');
-                fabBar.classList.add('translate-y-0', 'opacity-100');
+                $fabBar.removeClass('translate-y-4 opacity-0').addClass('translate-y-0 opacity-100');
             }, 10);
         }
 
         function hideFAB() {
-            const fabBar = document.getElementById('floating-audio-bar');
-            fabBar.classList.remove('translate-y-0', 'opacity-100');
-            fabBar.classList.add('translate-y-4', 'opacity-0');
+            const $fabBar = $('#floating-audio-bar');
+            $fabBar.removeClass('translate-y-0 opacity-100').addClass('translate-y-4 opacity-0');
             setTimeout(() => {
-                fabBar.classList.add('hidden');
+                $fabBar.addClass('hidden');
             }, 300);
         }
 

@@ -13,6 +13,19 @@ document.addEventListener('DOMContentLoaded', () => {
     renderExistingHistoryUI(); // Merender riwayat percakapan lama jika ada di localStorage
 });
 
+// ==========================================
+// 3. ELEMEN DOM & EVENT LISTENER UI
+// ==========================================
+
+const textAreaFirst = document.getElementById('search-first');
+const searchBtnFirst = document.getElementById('search-btn-first');
+const textAreaAi = document.getElementById('search-ai');
+const searchBtnAi = document.getElementById('search-btn-ai');
+const chatOutputSection = document.getElementById('chat-container');
+const heroSection = document.getElementById('hero');
+const chatInputSection = document.getElementById('chat-input');
+const chatInputFirstSection = document.getElementById('chat-input-first');
+
 function initThemeToggle() {
     const toggleBtn = document.getElementById('theme-toggle');
     const html = document.documentElement;
@@ -123,19 +136,6 @@ function renderExistingHistoryUI() {
     }
 }
 
-
-// ==========================================
-// 3. ELEMEN DOM & EVENT LISTENER UI
-// ==========================================
-
-const textAreaFirst = document.getElementById('search-first');
-const searchBtnFirst = document.getElementById('search-btn-first');
-const textAreaAi = document.getElementById('search-ai');
-const searchBtnAi = document.getElementById('search-btn-ai');
-const chatOutputSection = document.getElementById('chat-container');
-const heroSection = document.getElementById('hero');
-const chatInputSection = document.getElementById('chat-input');
-const chatInputFirstSection = document.getElementById('chat-input-first');
 
 if (textAreaFirst) {
     textAreaFirst.addEventListener('input', function () {
